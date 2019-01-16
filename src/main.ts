@@ -3,7 +3,13 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
+import { defaultTheme } from './AppConfig';
+
 Vue.config.productionTip = false;
+
+Vue.use(Vuetify, { theme: defaultTheme });
 
 new Vue({
   router,

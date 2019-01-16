@@ -1,0 +1,48 @@
+/* Transitions */
+
+// Router View Switch (Default)
+.router-view-switch-default-enter-active,
+.router-view-switch-default-leave-active {
+    transition: all 0.5s;
+}
+.router-view-switch-default-enter,
+.router-view-switch-default-leave-to {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+// Fade (Simple)
+.fade-simple-enter-active,
+.fade-simple-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-simple-enter,
+.fade-simple-leave-to {
+    opacity: 0;
+}
+
+// Slide Down (Simple)
+.slide-down-simple-enter-active,
+.slide-down-simple-leave-active {
+    transition: all 0.75s;
+}
+.slide-down-simple-enter,
+.slide-down-simple-leave-to {
+    opacity: 0;
+    transform: translateY(-40px);
+}
+
+// Slide Down In Fade Out
+.slide-down-in-fade-out-enter-active {
+    transition: all 0.5s;
+}
+.slide-down-in-fade-out-enter {
+    opacity: 0;
+    transform: translateY(-40px);
+}
+.slide-down-in-fade-out-leave-active {
+    transition: opacity 0.5s;
+}
+.slide-down-in-fade-out-leave-to {
+    opacity: 0;
+}
