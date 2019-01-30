@@ -1,4 +1,4 @@
-# ecommerce-client
+# Grocery Store - Online Shopping
 
 ## Project setup
 ```
