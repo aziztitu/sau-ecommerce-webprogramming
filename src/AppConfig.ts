@@ -2,7 +2,7 @@
 import colors from 'vuetify/es5/util/colors';
 
 export default {
-    title: 'E Commerce',
+    title: 'Grocery Store - Shop Online',
     api: {
         baseURL: `http://localhost:8081`,
     },
