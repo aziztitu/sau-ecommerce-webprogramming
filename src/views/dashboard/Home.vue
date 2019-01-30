@@ -18,7 +18,7 @@
                         <v-divider></v-divider>
 
                         <v-card-text style="text-align: left">
-                            <span class="body-2">
+                            <span class="body-1">
                                 Order from the comfort of your home, and let us do the shopping for you. Come pick up at the store when the order is ready, or even better, let us deliver it at your doorstep.
                                 Grocery shopping has never been easier.
                             </span>
@@ -44,8 +44,7 @@
                         <v-divider></v-divider>
 
                         <v-card-text style="text-align: left">
-                            <span
-                                class="body-2"
+                            <span class="body-1"
                             >Get all the best deals & promotions right on your screen. Don't miss out on your chance to save more.</span>
                         </v-card-text>
 
@@ -69,8 +68,7 @@
                         <v-divider></v-divider>
 
                         <v-card-text style="text-align: left">
-                            <span
-                                class="body-2"
+                            <span class="body-1"
                             >Introducing Grocery Points! Everytime you purchase groceries online, you are rewarded with Grocery Points, which you can redeem for future purchases.</span>
                         </v-card-text>
 
