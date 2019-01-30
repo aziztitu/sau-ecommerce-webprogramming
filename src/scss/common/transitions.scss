@@ -46,3 +46,14 @@
 .slide-down-in-fade-out-leave-to {
     opacity: 0;
 }
+
+// Slide Right (Simple)
+.slide-right-simple-enter-active,
+.slide-right-simple-leave-active {
+    transition: all 0.75s;
+}
+.slide-right-simple-enter,
+.slide-right-simple-leave-to {
+    opacity: 0;
+    transform: translateX(-40px);
+}

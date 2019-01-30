@@ -1,7 +1,7 @@
 <template>
     <transition name="nav-toolbar" appear>
         <v-toolbar dark color="primary" id="navToolbar" app clipped-left pa-0>
-            <v-toolbar-side-icon @click="$emit('hamburgerClicked')">
+            <v-toolbar-side-icon @click="$emit('hamburgerClicked')" v-if="showHamburgerIcon">
                 <slot name="hamburgerHolder"></slot>
             </v-toolbar-side-icon>
             <Logo class></Logo>
@@ -41,46 +41,53 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import AppConfig from "@/AppConfig";
-import App from "@/App.vue";
-import Logo from "@/components/common/app/Logo.vue";
+    import Vue from "vue";
+    import Component from "vue-class-component";
+    import AppConfig from "@/AppConfig";
+    import App from "@/App.vue";
+    import Logo from "@/components/common/app/Logo.vue";
+    import { Prop } from 'vue-property-decorator';
 
-@Component({
-    components: {
-        Logo
-    }
-})
-export default class NavToolbar extends Vue {
-    private appTitle = AppConfig.title;
+    @Component({
+        components: {
+            Logo
+        }
+    })
+    export default class NavToolbar extends Vue {
+        private appTitle = AppConfig.title;
 
-    private switchTheme() {
-        App.instance.switchTheme();
+        @Prop({
+            type: Boolean,
+            default: true,
+        })
+        private showHamburgerIcon!: boolean;
+
+        private switchTheme() {
+            App.instance.switchTheme();
+        }
     }
-}
 </script>
 
 <style lang="scss">
-#navToolbar {
-    .v-toolbar__extension {
-        padding: 0 !important;
+    #navToolbar {
+        .v-toolbar__extension {
+            padding: 0 !important;
+        }
     }
-}
 </style>
 
 
 <style lang="scss" scoped>
-@import "@/scss/common/constants.scss";
+    @import "@/scss/common/constants.scss";
 
-/* Transitions */
+    /* Transitions */
 
-.nav-toolbar-enter-active,
-.nav-toolbar-leave-active {
-    transition: transform 0.5s !important;
-}
-.nav-toolbar-enter,
-.nav-toolbar-leave-to {
-    transform: translateY(-100px) !important;
-}
+    .nav-toolbar-enter-active,
+    .nav-toolbar-leave-active {
+        transition: transform 0.5s !important;
+    }
+    .nav-toolbar-enter,
+    .nav-toolbar-leave-to {
+        transform: translateY(-100px) !important;
+    }
 </style>

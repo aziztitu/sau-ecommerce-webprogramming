@@ -1,9 +1,9 @@
 <template>
     <div id="dashboard" class="d-flex" v-resize="onWindowResized">
-        <NavToolbar @hamburgerClicked="showNavDrawer = !showNavDrawer">
+        <NavToolbar @hamburgerClicked="onHamburgerClicked">
             <template slot="hamburgerHolder">
                 <div class="d-flex align-center" icon>
-                    <v-icon v-if="showNavDrawer">chevron_left</v-icon>
+                    <v-icon v-if="(isOnMobile && showNavDrawer) || (!isOnMobile && hamburgerClicked)">chevron_left</v-icon>
                     <v-icon v-else>menu</v-icon>
                 </div>
             </template>
@@ -16,7 +16,8 @@
                 <v-navigation-drawer
                     app
                     floating
-                    :temporary="true"
+                    :temporary="isOnMobile"
+                    :mini-variant="!isOnMobile && (!hover && !hamburgerClicked)"
                     :clipped="true"
                     v-model="showNavDrawer"
                     id="navDrawer"
@@ -74,7 +75,7 @@
 
                         <v-divider></v-divider>
 
-                        <v-list-tile v-on:click="logout()">
+                        <!-- <v-list-tile v-on:click="logout()">
                             <v-list-tile-action>
                                 <v-btn icon>
                                     <v-icon>exit_to_app</v-icon>
@@ -83,7 +84,7 @@
                             <v-list-tile-content>
                                 <v-list-tile-title>Logout</v-list-tile-title>
                             </v-list-tile-content>
-                        </v-list-tile>
+                        </v-list-tile> -->
                     </v-list>
                 </v-navigation-drawer>
             </v-hover>
@@ -134,7 +135,15 @@ export default class Dashboard extends Vue {
     private mobileBreakPoint = 800;
     private isOnMobile = false;
 
-    private showNavDrawer = false;
+    /**
+     * Actual clicked state of the hamburger icon. Always true during mobile mode.
+     */
+    private hamburgerClicked = false;
+
+    /**
+     * Represents the v-model for the nav drawer. Always true during non-mobile mode.
+     */
+    private showNavDrawer = true;
 
     private navRouterLinks: NavRouterLink[][] = [
         [
@@ -144,15 +153,20 @@ export default class Dashboard extends Vue {
                 title: "Home"
             },
             {
-                to: "../accounts",
-                icon: "people",
-                title: "Accounts"
+                to: "../shop",
+                icon: "store",
+                title: "Shop"
+            },
+            {
+                to: "../cart",
+                icon: "shopping_cart",
+                title: "Cart"
             }
         ],
         [
             {
                 to: "../about",
-                icon: "info",
+                icon: "info_outline",
                 title: "About"
             }
         ]
@@ -198,8 +212,23 @@ export default class Dashboard extends Vue {
             } */
     }
 
+    private onHamburgerClicked() {
+        if (!this.isOnMobile) {
+            this.hamburgerClicked = !this.hamburgerClicked;
+            this.showNavDrawer = !this.isOnMobile || this.hamburgerClicked;
+        } else {
+            this.hamburgerClicked = true;
+            this.showNavDrawer = this.hamburgerClicked;
+        }
+    }
+
     private onWindowResized() {
+        const wasOnMobile = this.isOnMobile;
         this.isOnMobile = window.innerWidth < this.mobileBreakPoint;
+
+        if (wasOnMobile && !this.isOnMobile) {
+            this.hamburgerClicked = this.showNavDrawer;
+        }
     }
 }
 </script>
