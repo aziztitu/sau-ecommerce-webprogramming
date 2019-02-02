@@ -26,7 +26,7 @@
 
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary">Shop Now
+                            <v-btn color="primary" flat>Shop Now
                                 <v-icon right>arrow_forward</v-icon>
                             </v-btn>
                         </v-card-actions>
@@ -50,7 +50,7 @@
 
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary">View Deals
+                            <v-btn color="primary" flat>View Deals
                                 <v-icon right>arrow_forward</v-icon>
                             </v-btn>
                         </v-card-actions>
@@ -74,7 +74,7 @@
 
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary">View My GP
+                            <v-btn color="primary" flat>View My GP
                                 <v-icon right>arrow_forward</v-icon>
                             </v-btn>
                         </v-card-actions>

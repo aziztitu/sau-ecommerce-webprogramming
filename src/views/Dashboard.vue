@@ -29,10 +29,10 @@
                         style="top: 16px; margin-bottom: 32px"
                     -->
                     <v-list class="pt-2">
-                        <router-link v-if="true" :to="{name: 'signIn'}" tag="v-list-tile" append>
+                        <router-link v-if="true" :to="{name: 'signIn'}" tag="v-list-tile">
                             <v-list-tile-avatar>
                                 <img
-                                    src="https://i0.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?resize=256%2C256&quality=100&ssl=1"
+                                    src="/images/icons/user.png"
                                 >
                             </v-list-tile-avatar>
 
@@ -43,7 +43,7 @@
                         <router-link v-else to="../myAccount" tag="v-list-tile" append>
                             <v-list-tile-avatar>
                                 <img
-                                    src="https://i0.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?resize=256%2C256&quality=100&ssl=1"
+                                    src="/images/icons/user.png"
                                 >
                             </v-list-tile-avatar>
 
@@ -148,7 +148,7 @@ export default class Dashboard extends Vue {
     private navRouterLinks: NavRouterLink[][] = [
         [
             {
-                to: "",
+                to: "../home",
                 icon: "home",
                 title: "Home"
             },
