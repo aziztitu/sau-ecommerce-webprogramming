@@ -68,8 +68,9 @@
                         <v-divider></v-divider>
 
                         <v-card-text style="text-align: left">
-                            <span class="body-1"
-                            >Introducing Grocery Points! Everytime you purchase groceries online, you are rewarded with Grocery Points, which you can redeem for future purchases.</span>
+                            <span class="body-1">
+                                Introducing Grocery Points! Everytime you purchase groceries online, you are rewarded with Grocery Points, which you can redeem for future purchases.
+                            </span>
                         </v-card-text>
 
                         <v-card-actions>
