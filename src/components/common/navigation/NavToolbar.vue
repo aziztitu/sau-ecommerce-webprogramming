@@ -4,7 +4,9 @@
             <v-toolbar-side-icon @click="$emit('hamburgerClicked')" v-if="showHamburgerIcon">
                 <slot name="hamburgerHolder"></slot>
             </v-toolbar-side-icon>
-            <Logo class></Logo>
+            <router-link to="/">
+                <Logo class></Logo>
+            </router-link>
             <v-toolbar-title>{{appTitle}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
@@ -24,7 +26,7 @@
                 <slot name="mobile"></slot>
             </v-toolbar-items>
 
-            <v-toolbar class="primary" flat slot="extension">
+            <v-toolbar v-if="showExtension" class="primary" flat slot="extension">
                 <v-layout>
                     <v-flex xs12>
                         <v-autocomplete
@@ -61,6 +63,12 @@
             default: true,
         })
         private showHamburgerIcon!: boolean;
+
+        @Prop({
+            type: Boolean,
+            default: true,
+        })
+        private showExtension!: boolean;
 
         private switchTheme() {
             App.instance.switchTheme();

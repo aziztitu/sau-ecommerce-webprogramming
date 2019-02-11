@@ -1,8 +1,14 @@
 <template>
     <div id="auth">
-        <NavToolbar>
-            <router-link to="../login" append tag="v-btn" class="v-btn--flat route-indicator">Login</router-link>
-            <router-link to="../signUp" append tag="v-btn" class="v-btn--flat route-indicator">Sign Up</router-link>
+        <NavToolbar :showHamburgerIcon="false" :showExtension="false">
+            <router-link to="/" append tag="v-btn" class="v-btn--flat route-indicator">Home</router-link>
+            <router-link to="../signIn" append tag="v-btn" class="v-btn--flat route-indicator">Sign In</router-link>
+            <router-link
+                to="../signUp"
+                append
+                tag="v-btn"
+                class="v-btn--flat route-indicator"
+            >Sign Up</router-link>
         </NavToolbar>
         <v-content class="auth-content">
             <v-container class="auth-container" fluid>

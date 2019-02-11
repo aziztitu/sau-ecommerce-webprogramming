@@ -244,6 +244,10 @@ export default class Dashboard extends Vue {
 
         .dashboard-container {
             min-height: 100%;
+
+            .dashboard-layout {
+                min-height: 100%;
+            }
         }
     }
 }

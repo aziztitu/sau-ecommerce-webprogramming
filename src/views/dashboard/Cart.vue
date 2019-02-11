@@ -14,7 +14,7 @@ import Placeholder from '@/views/misc/Placeholder.vue';
     Placeholder,
   }
 })
-export default class Shop extends Vue {
+export default class Cart extends Vue {
   mounted() {
 
   }
