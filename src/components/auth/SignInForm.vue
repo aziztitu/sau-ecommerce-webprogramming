@@ -13,13 +13,13 @@
             transition="slide-down-simple"
         >{{msg.text}}</v-alert>
         <v-card-text>
-            <v-form class="pt-3">
+            <v-form class="pt-3" v-if="!auth.accountData">
                 <v-layout column>
                     <v-flex xs12>
-                        <v-text-field label="Username"></v-text-field>
+                        <v-text-field label="Username" v-model="username"></v-text-field>
                     </v-flex>
                     <v-flex xs12>
-                        <PasswordField></PasswordField>
+                        <PasswordField v-model="password"></PasswordField>
                     </v-flex>
                     <v-flex xs12 class="pt-4">
                         <v-btn class="right" color="primary" @click="onSubmitClicked">
@@ -28,6 +28,9 @@
                     </v-flex>
                 </v-layout>
             </v-form>
+            <v-flex v-else>
+                <span>You're already signed in!</span>
+            </v-flex>
         </v-card-text>
     </v-card>
 </template>
@@ -37,6 +40,7 @@
     import Vue from 'vue';
     import Component from 'vue-class-component';
     import PasswordField from '@/components/common/form/PasswordField.vue';
+    import auth, { AccountData } from '@/store/modules/auth';
 
     @Component({
         components: {
@@ -49,14 +53,38 @@
             text: ""
         }
 
-        mounted() {
+        username = "";
+        password = "";
 
+        get auth() {
+            return auth;
         }
 
-        onSubmitClicked() {
-            if (this.msg.text === '') {
-                this.msg.text = 'Coming Soon';
+        async onSubmitClicked() {
+            this.msg = {
+                error: false,
+                text: 'Signing in...',
+            };
+
+            console.log(this.username);
+            console.log(this.password);
+            let res = await auth.login({ username: this.username, password: this.password });
+            if (res.data.success) {
+                this.msg = {
+                    error: false,
+                    text: 'Signed in successfully',
+                };
+                this.goToHome();
+            } else {
+                this.msg = {
+                    error: true,
+                    text: res.data.message,
+                };
             }
+        }
+
+        goToHome() {
+            this.$router.push({ name: 'home' });
         }
     }
 </script>

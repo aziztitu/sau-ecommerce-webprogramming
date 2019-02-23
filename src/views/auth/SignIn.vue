@@ -18,7 +18,16 @@
     })
     export default class SignIn extends Vue {
         mounted() {
+            this.checkAuth();
+        }
 
+        async checkAuth() {
+            // TODO: Validate and redirect to Home if needed
+
+            /* let data = await authService.validateApiToken();
+            if (!data.success) {
+                this.$router.push({ name: 'home' })
+            } */
         }
     }
 </script>

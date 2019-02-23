@@ -3,7 +3,9 @@
         <NavToolbar @hamburgerClicked="onHamburgerClicked">
             <template slot="hamburgerHolder">
                 <div class="d-flex align-center" icon>
-                    <v-icon v-if="(isOnMobile && showNavDrawer) || (!isOnMobile && hamburgerClicked)">chevron_left</v-icon>
+                    <v-icon
+                        v-if="(isOnMobile && showNavDrawer) || (!isOnMobile && hamburgerClicked)"
+                    >chevron_left</v-icon>
                     <v-icon v-else>menu</v-icon>
                 </div>
             </template>
@@ -29,11 +31,9 @@
                         style="top: 16px; margin-bottom: 32px"
                     -->
                     <v-list class="pt-2">
-                        <router-link v-if="true" :to="{name: 'signIn'}" tag="v-list-tile">
+                        <router-link v-if="!curAccount" :to="{name: 'signIn'}" tag="v-list-tile">
                             <v-list-tile-avatar>
-                                <img
-                                    src="/images/icons/user.png"
-                                >
+                                <img src="/images/icons/user.png">
                             </v-list-tile-avatar>
 
                             <v-list-tile-content>
@@ -42,9 +42,7 @@
                         </router-link>
                         <router-link v-else to="../myAccount" tag="v-list-tile" append>
                             <v-list-tile-avatar>
-                                <img
-                                    src="/images/icons/user.png"
-                                >
+                                <img src="/images/icons/user.png">
                             </v-list-tile-avatar>
 
                             <v-list-tile-content>
@@ -84,7 +82,7 @@
                             <v-list-tile-content>
                                 <v-list-tile-title>Logout</v-list-tile-title>
                             </v-list-tile-content>
-                        </v-list-tile> -->
+                        </v-list-tile>-->
                     </v-list>
                 </v-navigation-drawer>
             </v-hover>
@@ -113,175 +111,178 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import store from "@/store";
-import NavToolbar from "@/components/common/navigation/NavToolbar.vue";
-import SnackBar, { SnackBarTypes } from "@/components/singleton/SnackBar.vue";
+    import Vue from "vue";
+    import Component from "vue-class-component";
+    import store from "@/store";
+    import NavToolbar from "@/components/common/navigation/NavToolbar.vue";
+    import SnackBar, { SnackBarTypes } from "@/components/singleton/SnackBar.vue";
+    import auth from '@/store/modules/auth';
 
-interface NavRouterLink {
-    to: string;
-    icon: string;
-    title: string;
-    addDivider?: boolean;
-}
-
-@Component({
-    components: {
-        NavToolbar
-    }
-})
-export default class Dashboard extends Vue {
-    private mobileBreakPoint = 800;
-    private isOnMobile = false;
-
-    /**
-     * Actual clicked state of the hamburger icon. Always true during mobile mode.
-     */
-    private hamburgerClicked = false;
-
-    /**
-     * Represents the v-model for the nav drawer. Always true during non-mobile mode.
-     */
-    private showNavDrawer = true;
-
-    private navRouterLinks: NavRouterLink[][] = [
-        [
-            {
-                to: "../home",
-                icon: "home",
-                title: "Home"
-            },
-            {
-                to: "../shop",
-                icon: "store",
-                title: "Shop"
-            },
-            {
-                to: "../cart",
-                icon: "shopping_cart",
-                title: "Cart"
-            }
-        ],
-        [
-            {
-                to: "../about",
-                icon: "info_outline",
-                title: "About"
-            }
-        ]
-    ];
-
-    private curAccount = {};
-
-    private async logout() {
-        SnackBar.show("Logging out...");
-        /* const resData = await authService.logoutSession();
-            if (resData.success) {
-                SnackBar.show('Logged out.');
-                this.goToLoginScreen();
-            } */
+    interface NavRouterLink {
+        to: string;
+        icon: string;
+        title: string;
+        addDivider?: boolean;
     }
 
-    private goToLoginScreen() {
-        this.$router.push("/auth/login");
-    }
+    @Component({
+        components: {
+            NavToolbar
+        }
+    })
+    export default class Dashboard extends Vue {
+        private mobileBreakPoint = 800;
+        private isOnMobile = false;
 
-    private async mounted() {
-        this.onWindowResized();
+        /**
+         * Actual clicked state of the hamburger icon. Always true during mobile mode.
+         */
+        private hamburgerClicked = false;
 
-        await this.validateLoginStatus();
-        await this.fetchDashboardData();
-    }
+        /**
+         * Represents the v-model for the nav drawer. Always true during non-mobile mode.
+         */
+        private showNavDrawer = true;
 
-    private async validateLoginStatus() {
-        /* const resData = await authService.validateApiToken();
-            if (!resData.success) {
-                SnackBar.show('Session expired. Please login again.', SnackBarTypes.Error);
-                this.goToLoginScreen();
-            } */
-    }
+        private navRouterLinks: NavRouterLink[][] = [
+            [
+                {
+                    to: "../home",
+                    icon: "home",
+                    title: "Home"
+                },
+                {
+                    to: "../shop",
+                    icon: "store",
+                    title: "Shop"
+                },
+                {
+                    to: "../cart",
+                    icon: "shopping_cart",
+                    title: "Cart"
+                }
+            ],
+            [
+                {
+                    to: "../about",
+                    icon: "info_outline",
+                    title: "About"
+                }
+            ]
+        ];
 
-    private async fetchDashboardData() {
-        /* const resData = await accountService.fetchBasicAccountInfo(SpecialAccountIdentifiers.Me);
-            if (resData.success) {
-                // console.log(resData.accountInfo);
-                this.curAccount = resData.accountInfo;
+        private get curAccount() {
+            return auth.accountData;
+        };
+
+        private async logout() {
+            SnackBar.show("Logging out...");
+            /* const resData = await authService.logoutSession();
+                if (resData.success) {
+                    SnackBar.show('Logged out.');
+                    this.goToLoginScreen();
+                } */
+        }
+
+        private goToLoginScreen() {
+            this.$router.push("/auth/login");
+        }
+
+        private async mounted() {
+            this.onWindowResized();
+
+            await this.validateLoginStatus();
+            await this.fetchDashboardData();
+        }
+
+        private async validateLoginStatus() {
+            /* const resData = await authService.validateApiToken();
+                if (!resData.success) {
+                    SnackBar.show('Session expired. Please login again.', SnackBarTypes.Error);
+                    this.goToLoginScreen();
+                } */
+        }
+
+        private async fetchDashboardData() {
+            /* const resData = await accountService.fetchBasicAccountInfo(SpecialAccountIdentifiers.Me);
+                if (resData.success) {
+                    // console.log(resData.accountInfo);
+                    this.curAccount = resData.accountInfo;
+                } else {
+                    SnackBar.show(resData.message, SnackBarTypes.Error);
+                } */
+        }
+
+        private onHamburgerClicked() {
+            if (!this.isOnMobile) {
+                this.hamburgerClicked = !this.hamburgerClicked;
+                this.showNavDrawer = !this.isOnMobile || this.hamburgerClicked;
             } else {
-                SnackBar.show(resData.message, SnackBarTypes.Error);
-            } */
-    }
+                this.hamburgerClicked = true;
+                this.showNavDrawer = this.hamburgerClicked;
+            }
+        }
 
-    private onHamburgerClicked() {
-        if (!this.isOnMobile) {
-            this.hamburgerClicked = !this.hamburgerClicked;
-            this.showNavDrawer = !this.isOnMobile || this.hamburgerClicked;
-        } else {
-            this.hamburgerClicked = true;
-            this.showNavDrawer = this.hamburgerClicked;
+        private onWindowResized() {
+            const wasOnMobile = this.isOnMobile;
+            this.isOnMobile = window.innerWidth < this.mobileBreakPoint;
+
+            if (wasOnMobile && !this.isOnMobile) {
+                this.hamburgerClicked = this.showNavDrawer;
+            }
         }
     }
-
-    private onWindowResized() {
-        const wasOnMobile = this.isOnMobile;
-        this.isOnMobile = window.innerWidth < this.mobileBreakPoint;
-
-        if (wasOnMobile && !this.isOnMobile) {
-            this.hamburgerClicked = this.showNavDrawer;
-        }
-    }
-}
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/common/constants.scss";
+    @import "@/scss/common/constants.scss";
 
-#dashboard {
-    min-height: 100%;
+    #dashboard {
+        min-height: 100%;
 
-    .dashboard-content {
-        flex: 1;
+        .dashboard-content {
+            flex: 1;
 
-        .dashboard-container {
-            min-height: 100%;
-
-            .dashboard-layout {
+            .dashboard-container {
                 min-height: 100%;
-            }
-        }
-    }
-}
 
-#navDrawer {
-    .v-list {
-        .v-list__tile {
-            .v-avatar {
-                margin: 4px;
-            }
-
-            .v-list__tile__action {
-                .v-btn {
-                    margin: 6px;
+                .dashboard-layout {
+                    min-height: 100%;
                 }
             }
         }
+    }
 
-        .router-link-active {
-            border-right: $accentColor solid $border-small;
-            background-color: rgba(127, 127, 127, 0.15);
+    #navDrawer {
+        .v-list {
+            .v-list__tile {
+                .v-avatar {
+                    margin: 4px;
+                }
+
+                .v-list__tile__action {
+                    .v-btn {
+                        margin: 6px;
+                    }
+                }
+            }
+
+            .router-link-active {
+                border-right: $accentColor solid $border-small;
+                background-color: rgba(127, 127, 127, 0.15);
+            }
         }
     }
-}
 
-/* Transitions */
+    /* Transitions */
 
-// Nav Drawer
-.nav-drawer-enter-active,
-.nav-drawer-leave-active {
-    transition: transform 0.5s 0.5s !important;
-}
-.nav-drawer-enter,
-.nav-drawer-leave-to {
-    transform: translateX(-100px) !important;
-}
+    // Nav Drawer
+    .nav-drawer-enter-active,
+    .nav-drawer-leave-active {
+        transition: transform 0.5s 0.5s !important;
+    }
+    .nav-drawer-enter,
+    .nav-drawer-leave-to {
+        transform: translateX(-100px) !important;
+    }
 </style>
