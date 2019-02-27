@@ -116,7 +116,7 @@
     import store from "@/store";
     import NavToolbar from "@/components/common/navigation/NavToolbar.vue";
     import SnackBar, { SnackBarTypes } from "@/components/singleton/SnackBar.vue";
-    import auth from '@/store/modules/auth';
+    import authModule from '@/store/modules/authModule';
 
     interface NavRouterLink {
         to: string;
@@ -172,7 +172,7 @@
         ];
 
         private get curAccount() {
-            return auth.accountData;
+            return authModule.accountData;
         };
 
         private async logout() {
