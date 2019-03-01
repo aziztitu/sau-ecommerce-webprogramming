@@ -12,6 +12,7 @@
     import Component from 'vue-class-component';
     import { TypedEvent } from '@/tools/external/TypedEvent.ts';
     import SnackBar from '@/components/singleton/SnackBar.vue';
+import authModule from '@/store/modules/authModule';
 
     export enum AppEventType {
         ThemeChanged,
@@ -33,6 +34,10 @@
         constructor() {
             super();
             App.instance = this;
+        }   
+
+        mounted() {
+            authModule.refreshAuthData();
         }
 
         public switchTheme() {

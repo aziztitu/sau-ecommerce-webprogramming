@@ -16,7 +16,12 @@
             <v-form class="pt-3" v-if="!authModule.accountData">
                 <v-layout column>
                     <v-flex xs12>
-                        <v-text-field label="Username" v-model="username" @keyup.enter="submit"></v-text-field>
+                        <v-text-field
+                            ref="username"
+                            label="Username"
+                            v-model="username"
+                            @keyup.enter="submit"
+                        ></v-text-field>
                     </v-flex>
                     <v-flex xs12>
                         <PasswordField v-model="password" @keyup.enter="submit"></PasswordField>
@@ -60,7 +65,13 @@
             return authModule;
         }
 
+        mounted() {
+            (this.$refs.username as any).focus();
+        }
+
         async submit() {
+            console.log('Submitting');
+
             this.msg = {
                 error: false,
                 text: 'Signing in...',
@@ -74,7 +85,7 @@
                     error: false,
                     text: 'Signed in successfully',
                 };
-                // this.goToHome();
+                this.goToHome();
             } else {
                 this.msg = {
                     error: true,
