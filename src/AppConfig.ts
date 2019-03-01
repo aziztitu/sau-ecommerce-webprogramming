@@ -3,8 +3,9 @@ import colors from 'vuetify/es5/util/colors';
 
 export default {
     title: 'Grocery Store - Shop Online',
+    mode: process.env.NODE_ENV,
     api: {
-        baseURL: `http://localhost:8081`,
+        baseURL: process.env.VUE_APP_API_BASE_URL,
     },
 };
 
