@@ -10,14 +10,24 @@ import store from '..';
 import { Api } from '@/services/api/Api';
 import { ApiResponseData } from '@/tools/types/api';
 
+export enum AccountRole {
+    Admin = 'admin',
+    User = 'user',
+}
+
+export enum ReservedUsername {
+    Empty = '',
+    Admin = 'admin',
+}
+
 export type AccountData = {
     username: string;
 } | null;
 
 @Module({
     dynamic: true,
-    store: store,
     name: 'auth',
+    store: store,
 })
 class AuthModule extends VuexModule {
     accountData: AccountData = null;
@@ -35,13 +45,31 @@ class AuthModule extends VuexModule {
     }
 
     @Action
+    async refreshAuthData() {
+        const res = await Api.instance.get(`accounts/me/authData`);
+        console.log(res);
+        if (res.data.success) {
+            let { accountInfo } = res.data.authData;
+            await this.setAccountData(accountInfo);
+        }
+    }
+
+    @Action
+    async clearAuthData() {
+        await this.setAccountData(null);
+    }
+
+    @Action
     async validateApiToken() {
         const res = await Api.instance.post<ApiResponseData>('auth/validateApiToken');
         return res;
     }
 
     @Action
-    async login({ username, password }: { username: string; password: string }) {
+    async login(
+        { username, password }: { username: string; password: string },
+        autoRefreshAccount = true
+    ) {
         console.log(username);
         console.log(password);
         const res = await Api.instance.post<ApiResponseData>('auth/login', {
@@ -51,10 +79,8 @@ class AuthModule extends VuexModule {
         });
 
         console.log(res);
-        if (res.data.success) {
-            this.setAccountData({
-                username,
-            });
+        if (res.data.success && autoRefreshAccount) {
+            await this.refreshAuthData();
         }
 
         return res;
@@ -63,9 +89,8 @@ class AuthModule extends VuexModule {
     @Action
     async logoutSession() {
         const res = await Api.instance.post<ApiResponseData>('auth/logoutSession');
-
         if (res.data.success) {
-            this.setAccountData(null);
+            await this.clearAuthData();
         }
 
         return res;

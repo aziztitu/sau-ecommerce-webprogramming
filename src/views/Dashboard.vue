@@ -37,10 +37,10 @@
                             </v-list-tile-avatar>
 
                             <v-list-tile-content>
-                                <v-list-tile-title>Sign In</v-list-tile-title>
+                                <v-list-tile-title>Sign In / Sign Up</v-list-tile-title>
                             </v-list-tile-content>
                         </router-link>
-                        <router-link v-else to="../myAccount" tag="v-list-tile" append>
+                        <router-link v-else :to="{name: 'myAccount'}" tag="v-list-tile" append>
                             <v-list-tile-avatar>
                                 <img src="/images/icons/user.png">
                             </v-list-tile-avatar>
@@ -73,7 +73,7 @@
 
                         <v-divider></v-divider>
 
-                        <!-- <v-list-tile v-on:click="logout()">
+                        <v-list-tile @click="logout()">
                             <v-list-tile-action>
                                 <v-btn icon>
                                     <v-icon>exit_to_app</v-icon>
@@ -82,7 +82,7 @@
                             <v-list-tile-content>
                                 <v-list-tile-title>Logout</v-list-tile-title>
                             </v-list-tile-content>
-                        </v-list-tile>-->
+                        </v-list-tile>
                     </v-list>
                 </v-navigation-drawer>
             </v-hover>
@@ -177,15 +177,19 @@
 
         private async logout() {
             SnackBar.show("Logging out...");
-            /* const resData = await authService.logoutSession();
-                if (resData.success) {
-                    SnackBar.show('Logged out.');
-                    this.goToLoginScreen();
-                } */
+            const res = await authModule.logoutSession();
+            if (res.data.success) {
+                SnackBar.show('Logged out.');
+                this.goToHomeScreen();
+            }
         }
 
         private goToLoginScreen() {
-            this.$router.push("/auth/login");
+            this.$router.push({name: 'signIn'});
+        }
+
+        private goToHomeScreen() {
+            this.$router.push({name: 'home'});
         }
 
         private async mounted() {

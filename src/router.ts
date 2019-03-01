@@ -26,6 +26,11 @@ export default new Router({
                     redirect: 'home',
                 },
                 {
+                    path: 'myAccount',
+                    name: 'myAccount',
+                    component: Home,
+                },
+                {
                     path: 'home',
                     name: 'home',
                     component: Home,
@@ -51,6 +56,10 @@ export default new Router({
             path: '/auth',
             component: Auth,
             children: [
+                {
+                    path: '',
+                    redirect: 'signIn',
+                },
                 {
                     path: 'signIn',
                     name: 'signIn',
