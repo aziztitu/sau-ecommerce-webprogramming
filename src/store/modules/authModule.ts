@@ -88,19 +88,16 @@ class AuthModule extends VuexModule {
     }
 
     @Action
-    async signup(signupData: { name: string; username: string; password: string; email: string }) {
-        let { name, username, password, email } = signupData;
-        AppHelper.debug(name);
-        AppHelper.debug(username);
-        AppHelper.debug(password);
-        AppHelper.debug(email);
+    async signup(signupData: {
+        name: string;
+        username: string;
+        password: string;
+        email: string;
+        recaptchaResponse: any;
+    }) {
+        AppHelper.debug(signupData);
 
-        const res = await Api.instance.post<ApiResponseData>('auth/signup', {
-            name,
-            username,
-            password,
-            email,
-        });
+        const res = await Api.instance.post<ApiResponseData>('auth/signup', signupData);
 
         AppHelper.debug(res);
         /* if (res.data.success) {

@@ -7,6 +7,9 @@ export default {
     api: {
         baseURL: process.env.VUE_APP_API_BASE_URL,
     },
+    recaptcha: {
+        siteKey: process.env.VUE_APP_RECAPTCHA_SITE_KEY,
+    },
 };
 
 export const defaultTheme = {
