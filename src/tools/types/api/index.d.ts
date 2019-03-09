@@ -1,5 +1,5 @@
 export type ApiResponseData = {
     success: boolean;
     message: string;
-    errorReport?: object;
+    errorReport?: any;
 } & { [key: string]: any };

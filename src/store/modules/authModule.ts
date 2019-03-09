@@ -9,6 +9,7 @@ import {
 import store from '..';
 import { Api } from '@/services/api/Api';
 import { ApiResponseData } from '@/tools/types/api';
+import AppHelper from '../../tools/AppHelper';
 
 export enum AccountRole {
     Admin = 'admin',
@@ -47,7 +48,7 @@ class AuthModule extends VuexModule {
     @Action
     async refreshAuthData() {
         const res = await Api.instance.get(`accounts/me/authData`);
-        console.log(res);
+        AppHelper.debug(res);
         if (res.data.success) {
             let { accountInfo } = res.data.authData;
             await this.setAccountData(accountInfo);
@@ -70,18 +71,40 @@ class AuthModule extends VuexModule {
         { username, password }: { username: string; password: string },
         autoRefreshAccount = true
     ) {
-        console.log(username);
-        console.log(password);
+        AppHelper.debug(username);
+        AppHelper.debug(password);
         const res = await Api.instance.post<ApiResponseData>('auth/login', {
             username,
             password,
             storeApiTokenInSession: true,
         });
 
-        console.log(res);
+        AppHelper.debug(res);
         if (res.data.success && autoRefreshAccount) {
             await this.refreshAuthData();
         }
+
+        return res;
+    }
+
+    @Action
+    async signup(signupData: { name: string; username: string; password: string; email: string }) {
+        let { name, username, password, email } = signupData;
+        AppHelper.debug(name);
+        AppHelper.debug(username);
+        AppHelper.debug(password);
+        AppHelper.debug(email);
+
+        const res = await Api.instance.post<ApiResponseData>('auth/signup', {
+            name,
+            username,
+            password,
+            email,
+        });
+
+        AppHelper.debug(res);
+        /* if (res.data.success) {
+        } */
 
         return res;
     }

@@ -1,6 +1,6 @@
 <template>
     <v-flex class="max-height">
-        <SignUpForm></SignUpForm>
+        <SignUpForm @on-submit="onSignUpSubmitted"></SignUpForm>
     </v-flex>
 </template>
 
@@ -9,6 +9,7 @@
     import Component from 'vue-class-component';
     import Placeholder from '@/views/misc/Placeholder.vue';
     import SignUpForm from '@/components/auth/SignUpForm.vue';
+    import AppHelper from '@/tools/AppHelper';
 
     @Component({
         components: {
@@ -16,9 +17,18 @@
             SignUpForm,
         }
     })
-    export default class SignIn extends Vue {
+    export default class SignUp extends Vue {
         mounted() {
 
+        }
+
+        onSignUpSubmitted(resultSuccess: boolean) {
+            AppHelper.debug(`On SignUp Submitted: ${resultSuccess}`);
+            if (resultSuccess) {
+                setTimeout(() => {
+                    this.$router.push({ name: 'signIn' });
+                }, 1000);
+            }
         }
     }
 </script>
