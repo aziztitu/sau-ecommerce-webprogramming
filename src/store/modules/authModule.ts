@@ -22,7 +22,10 @@ export enum ReservedUsername {
 }
 
 export type AccountData = {
+    id: string;
     username: string;
+    name: string;
+    role: AccountRole;
 } | null;
 
 @Module({
@@ -41,7 +44,10 @@ class AuthModule extends VuexModule {
     @Action
     assignDummyAccount() {
         this.setAccountData({
+            id: '',
             username: 'dummy',
+            name: 'Dummy',
+            role: AccountRole.User,
         });
     }
 

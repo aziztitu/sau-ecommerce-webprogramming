@@ -2,10 +2,17 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Dashboard from '@/views/Dashboard.vue';
+import MyAccount from '@/views/dashboard/MyAccount.vue';
 import Home from '@/views/dashboard/Home.vue';
 import Shop from '@/views/dashboard/Shop.vue';
 import Cart from '@/views/dashboard/Cart.vue';
 import About from '@/views/dashboard/About.vue';
+import Admin from '@/views/dashboard/Admin.vue';
+
+import AdminHome from '@/views/dashboard/admin/AdminHome.vue';
+import AdminAccounts from '@/views/dashboard/admin/AdminAccounts.vue';
+import AdminVendors from '@/views/dashboard/admin/AdminVendors.vue';
+import AdminProducts from '@/views/dashboard/admin/AdminProducts.vue';
 
 import Auth from '@/views/Auth.vue';
 import SignIn from '@/views/auth/SignIn.vue';
@@ -28,7 +35,7 @@ export default new Router({
                 {
                     path: 'myAccount',
                     name: 'myAccount',
-                    component: Home,
+                    component: MyAccount,
                 },
                 {
                     path: 'home',
@@ -49,6 +56,36 @@ export default new Router({
                     path: 'about',
                     name: 'about',
                     component: About,
+                },
+                {
+                    path: 'admin',
+                    component: Admin,
+                    children: [
+                        {
+                            path: '',
+                            redirect: 'home',
+                        },
+                        {
+                            path: 'home',
+                            name: 'adminHome',
+                            component: AdminHome,
+                        },
+                        {
+                            path: 'accounts',
+                            name: 'adminAccounts',
+                            component: AdminAccounts,
+                        },
+                        {
+                            path: 'vendors',
+                            name: 'adminVendors',
+                            component: AdminVendors,
+                        },
+                        {
+                            path: 'products',
+                            name: 'adminProducts',
+                            component: AdminProducts,
+                        },
+                    ],
                 },
             ],
         },

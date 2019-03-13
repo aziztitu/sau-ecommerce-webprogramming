@@ -50,6 +50,34 @@
                             </v-list-tile-content>
                         </router-link>
 
+                        <div v-if="isAdmin">
+                            <div
+                                v-for="(navRouterLinkGroup, index) in adminNavRouterLinks"
+                                :key="'admin'+index"
+                            >
+                                <v-divider></v-divider>
+                                <router-link
+                                    v-for="navRouterLink in navRouterLinkGroup"
+                                    :key="navRouterLink.title"
+                                    :to="navRouterLink.to"
+                                    tag="v-list-tile"
+                                    append
+                                >
+                                    <v-list-tile-action>
+                                        <v-btn icon outline color>
+                                            <v-icon medium>{{navRouterLink.icon}}</v-icon>
+                                        </v-btn>
+                                    </v-list-tile-action>
+
+                                    <v-list-tile-content>
+                                        <v-list-tile-title>
+                                            <span class>{{navRouterLink.title}}</span>
+                                        </v-list-tile-title>
+                                    </v-list-tile-content>
+                                </router-link>
+                            </div>
+                        </div>
+
                         <div v-for="(navRouterLinkGroup, index) in navRouterLinks" :key="index">
                             <v-divider></v-divider>
                             <router-link
@@ -116,10 +144,10 @@
     import store from "@/store";
     import NavToolbar from "@/components/common/navigation/NavToolbar.vue";
     import SnackBar, { SnackBarTypes } from "@/components/singleton/SnackBar.vue";
-    import authModule from '@/store/modules/authModule';
+    import authModule, { AccountRole } from '@/store/modules/authModule';
 
     interface NavRouterLink {
-        to: string;
+        to: { name: string } | string;
         icon: string;
         title: string;
         addDivider?: boolean;
@@ -144,27 +172,52 @@
          */
         private showNavDrawer = true;
 
+        private adminNavRouterLinks: NavRouterLink[][] = [
+            [
+                {
+                    to: { name: 'adminHome' },
+                    icon: "dashboard",
+                    title: "Admin Panel"
+                },
+                {
+                    to: { name: 'adminAccounts' },
+                    icon: "supervised_user_circle",
+                    title: "Accounts"
+                },
+                {
+                    to: { name: 'adminVendors' },
+                    icon: "local_shipping",
+                    title: "Vendors"
+                },
+                {
+                    to: { name: 'adminProducts' },
+                    icon: "fastfood",
+                    title: "Products"
+                },
+            ],
+        ];
+
         private navRouterLinks: NavRouterLink[][] = [
             [
                 {
-                    to: "../home",
+                    to: { name: 'home' },
                     icon: "home",
                     title: "Home"
                 },
                 {
-                    to: "../shop",
+                    to: { name: 'shop' },
                     icon: "store",
                     title: "Shop"
                 },
                 {
-                    to: "../cart",
+                    to: { name: 'cart' },
                     icon: "shopping_cart",
                     title: "Cart"
                 }
             ],
             [
                 {
-                    to: "../about",
+                    to: { name: 'about' },
                     icon: "info_outline",
                     title: "About"
                 }
@@ -173,6 +226,10 @@
 
         private get curAccount() {
             return authModule.accountData;
+        };
+
+        private get isAdmin() {
+            return this.curAccount && this.curAccount.role === AccountRole.Admin;
         };
 
         private async logout() {
@@ -185,11 +242,11 @@
         }
 
         private goToLoginScreen() {
-            this.$router.push({name: 'signIn'});
+            this.$router.push({ name: 'signIn' });
         }
 
         private goToHomeScreen() {
-            this.$router.push({name: 'home'});
+            this.$router.push({ name: 'home' });
         }
 
         private async mounted() {

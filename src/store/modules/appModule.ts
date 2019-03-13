@@ -5,7 +5,7 @@ import authModule from './authModule';
 
 @Module({
     dynamic: true,
-    name: 'dashboardModule',
+    name: 'app',
     store: store,
 })
 class AppModule extends VuexModule {
