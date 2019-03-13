@@ -72,7 +72,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn flat @click="vendorAddDialogModel = false">Close</v-btn>
-                    <v-btn flat @click="addNewVendor" :loading="isAddingVendor">Save</v-btn>
+                    <v-btn flat @click="addNewVendor" :loading="isAddingVendor">Submit</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -89,7 +89,7 @@
     import SnackBar from '@/components/singleton/SnackBar.vue';
 
     class VendorData {
-        id?: string;
+        _id?: string;
         name: string = "";
         email: string = "";
         phone: string = "";
@@ -160,7 +160,7 @@
                 this.newVendorData = new VendorData();
                 SnackBar.show('Vendor added successfully');
 
-                this.vendorAddDialogModel = false;
+                // this.vendorAddDialogModel = false;
                 this.refreshVendors();
             } else {
                 SnackBar.show(`Error: ${resData.message}`);
