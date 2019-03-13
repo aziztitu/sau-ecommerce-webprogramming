@@ -12,7 +12,7 @@
                 <v-input class="filePicker" ref="filePicker">
                     <v-layout class="pa-3" justify-center>
                         <v-flex
-                            v-if="filesPicked.length === 0"
+                            v-if="!filesPicked || filesPicked.length === 0"
                             class="center-text"
                         >No Files Selected</v-flex>
                         <v-layout row v-else align-center>
@@ -37,7 +37,7 @@
 <script lang='ts'>
     import Vue from 'vue';
     import Component from 'vue-class-component';
-    import { Prop } from 'vue-property-decorator';
+    import { Prop, Emit } from 'vue-property-decorator';
 
     @Component
     export default class FilePicker extends Vue {
@@ -54,22 +54,33 @@
         })
         label!: string;
 
-        filesPicked: any[] = [];
+        filesPicked: FileList = this.emptyFileList;
+
+        get emptyFileList() {
+            let emptyFileInput = document.createElement('input');
+            emptyFileInput.type = 'file';
+
+            return emptyFileInput.files as FileList;
+        }
+
+        get files() {
+            return this.filesPicked;
+        }
 
         mounted() {
             console.log((this.$refs.filePicker as any));
         }
 
+        @Emit('onFilesUpdated')
         onFileInputChanged(e: Event) {
             this.filesPicked = (this.$refs.fileInput as any).files;
-
             console.log(this.filesPicked);
+
+            return this.filesPicked;
         }
 
         clearFileInput() {
-            let emptyFileInput = document.createElement('input');
-            emptyFileInput.type = 'file';
-            (this.$refs.fileInput as any).files = emptyFileInput.files;
+            (this.$refs.fileInput as any).files = this.emptyFileList;
         }
     }
 </script>

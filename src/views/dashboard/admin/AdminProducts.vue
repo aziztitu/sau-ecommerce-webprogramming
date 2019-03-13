@@ -53,7 +53,10 @@
                                     <v-text-field v-model="newProductData.plu" label="PLU*"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <FilePicker label="Product Image"></FilePicker>
+                                    <FilePicker
+                                        label="Product Image"
+                                        @onFilesUpdated="(files) => {newProductData.imageFile = (files && files.length > 0) ? files[0] : null}"
+                                    ></FilePicker>
                                 </v-flex>
                                 <v-flex xs12>
                                     <v-select
@@ -91,6 +94,7 @@
     import Component from 'vue-class-component';
     import Placeholder from '@/views/misc/Placeholder.vue';
     import vendorService from '@/services/api/vendorService';
+    import productService from '@/services/api/productService';
     import FilePicker from '@/components/common/form/FilePicker.vue';
 
     class ProductData {
@@ -98,7 +102,7 @@
         name: string = "";
         price: number = 0;
         plu: string = "";
-        imageName: string = "";
+        imageFile: File | null = null;
         vendorId: string = "";
     }
 
@@ -131,7 +135,7 @@
 
         async addNewProduct() {
             console.log(this.newProductData);
-
+            let resData = await productService.addNewProduct(this.newProductData);
         }
     }
 </script>
