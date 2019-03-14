@@ -79,7 +79,7 @@
             return this.filesPicked;
         }
 
-        clearFileInput() {
+        public clearFileInput() {
             (this.$refs.fileInput as any).files = this.emptyFileList;
         }
     }

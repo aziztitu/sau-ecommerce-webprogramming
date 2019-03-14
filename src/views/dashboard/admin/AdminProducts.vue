@@ -54,6 +54,7 @@
                                 </v-flex>
                                 <v-flex xs12>
                                     <FilePicker
+                                        ref="productImagePicker"
                                         label="Product Image"
                                         @onFilesUpdated="(files) => {newProductData.imageFile = (files && files.length > 0) ? files[0] : null}"
                                     ></FilePicker>
@@ -135,7 +136,28 @@
 
         async addNewProduct() {
             console.log(this.newProductData);
-            let resData = await productService.addNewProduct(this.newProductData);
+
+            let formData = new FormData();
+            if (this.newProductData.imageFile) {
+                formData.append('imageFile', this.newProductData.imageFile);
+            }
+
+            let { name, price, plu, vendorId } = this.newProductData;
+
+            formData.append('_default', JSON.stringify({
+                name,
+                price,
+                plu,
+                vendorId
+            }));
+
+            let resData = await productService.addNewProduct(formData);
+            console.log(resData);
+
+            if (resData.success) {
+                this.newProductData = new ProductData();
+                (this.$refs.productImagePicker as FilePicker).clearFileInput();
+            }
         }
     }
 </script>

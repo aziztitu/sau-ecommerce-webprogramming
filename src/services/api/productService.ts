@@ -7,7 +7,7 @@ export default {
         return res.data;
     },
 
-    async addNewProduct(productData: any) {
+    async addNewProduct(productData: FormData) {
         let res = await Api.instance.put<ApiResponseData>('products/new', productData);
         return res.data;
     },
