@@ -7,7 +7,13 @@
                         <v-toolbar-title>Products</v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-toolbar-items>
-                            <v-btn icon outline dark>
+                            <v-btn
+                                icon
+                                outline
+                                dark
+                                @click="refreshProducts"
+                                :loading="isLoadingProducts"
+                            >
                                 <v-icon>refresh</v-icon>
                             </v-btn>
                             <v-btn icon outline dark @click="productAddDialogModel = true">
@@ -17,10 +23,13 @@
                     </v-toolbar>
                 </v-card-title>
                 <v-card-text class="pa-0">
-                    <v-layout row>
-                        <v-flex xs12 pa-5>
-                            <span class="subheading">Products are not being displayed here yet</span>
+                    <v-layout column v-if="products.length > 0" py-2>
+                        <v-flex my-2 mx-3 xs12 v-for="(product, i) in products" :key="i">
+                            <Product :value="product"></Product>
                         </v-flex>
+                    </v-layout>
+                    <v-layout row v-else>
+                        <v-flex xs12 pa-5>No Products available</v-flex>
                     </v-layout>
                 </v-card-text>
             </v-card>
@@ -76,7 +85,11 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-checkbox v-model="addAnotherProduct" label="Add another"></v-checkbox>
-                    <v-btn flat @click="productAddDialogModel = false">Close</v-btn>
+                    <v-btn
+                        flat
+                        @click="productAddDialogModel = false"
+                        :disabled="isAddingProduct"
+                    >Close</v-btn>
                     <v-btn
                         flat
                         @click="addNewProduct"
@@ -97,20 +110,15 @@
     import vendorService from '@/services/api/vendorService';
     import productService from '@/services/api/productService';
     import FilePicker from '@/components/common/form/FilePicker.vue';
+    import AppConfig from '@/AppConfig';
+    import Product, { ProductData } from '@/components/dashboard/Product.vue';
 
-    class ProductData {
-        _id?: string;
-        name: string = "";
-        price: number = 0;
-        plu: string = "";
-        imageFile: File | null = null;
-        vendorId: string = "";
-    }
 
     @Component({
         components: {
             Placeholder,
-            FilePicker
+            FilePicker,
+            Product
         }
     })
     export default class AdminProducts extends Vue {
@@ -118,19 +126,38 @@
         newProductData: ProductData = new ProductData();
 
         productAddDialogModel = false;
+        isLoadingProducts = false;
         isAddingProduct = false;
         addAnotherProduct = false;
 
         vendors: any[] = [];
+        products: any[] = [];
+
+        get apiBaseURL() {
+            return AppConfig.api.baseURL;
+        }
 
         mounted() {
             this.refreshVendors();
+            this.refreshProducts();
         }
 
         async refreshVendors() {
             let resData = await vendorService.getAllVendors();
             if (resData.success) {
                 this.vendors = resData.vendors;
+            }
+        }
+
+        async refreshProducts() {
+            this.isLoadingProducts = true;
+            let resData = await productService.getAllProducts();
+            this.isLoadingProducts = false;
+
+            if (resData.success) {
+                console.log(resData);
+
+                this.products = resData.products;
             }
         }
 
@@ -155,8 +182,17 @@
             console.log(resData);
 
             if (resData.success) {
-                this.newProductData = new ProductData();
-                (this.$refs.productImagePicker as FilePicker).clearFileInput();
+
+                if (this.addAnotherProduct) {
+                    this.newProductData.name = '';
+                    this.newProductData.price = 0;
+                } else {
+                    this.newProductData = new ProductData();
+                    (this.$refs.productImagePicker as FilePicker).clearFileInput();
+                    this.productAddDialogModel = false;
+                }
+
+                this.refreshProducts();
             }
         }
     }

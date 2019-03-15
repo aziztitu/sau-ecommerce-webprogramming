@@ -19,6 +19,7 @@
                             <v-flex
                                 v-if="filesPicked.length === 1"
                                 class="center-text"
+                                style="overflow: hidden; text-overflow: ellipsis;"
                             >{{filesPicked[0].name}}</v-flex>
                             <v-flex v-else class="center-text">{{filesPicked.length}} files selected</v-flex>
 
