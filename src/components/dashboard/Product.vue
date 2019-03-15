@@ -1,5 +1,5 @@
 <template>
-    <v-card hover style="cursor: inherit">
+    <v-card hover style="cursor: inherit" class="product">
         <v-layout row pa-3>
             <v-img
                 v-if="value.imageName"
@@ -58,6 +58,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .product {
+      // border-radius: 10px;
+    }
+
     .product-img {
         $productImageSize: 200px;
         min-width: $productImageSize;
