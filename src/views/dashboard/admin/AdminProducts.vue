@@ -25,7 +25,7 @@
                 <v-card-text class="pa-0">
                     <v-layout column v-if="products.length > 0" py-2>
                         <v-flex my-2 mx-3 xs12 v-for="(product, i) in products" :key="i">
-                            <Product :value="product"></Product>
+                            <Product :editable="true" v-model="products[i]" @onremoved="refreshProducts"></Product>
                         </v-flex>
                     </v-layout>
                     <v-layout row v-else>
@@ -112,6 +112,7 @@
     import FilePicker from '@/components/common/form/FilePicker.vue';
     import AppConfig from '@/AppConfig';
     import Product, { ProductData } from '@/components/dashboard/Product.vue';
+    import dashboardModule from '@/store/modules/dashboardModule';
 
 
     @Component({
@@ -130,23 +131,23 @@
         isAddingProduct = false;
         addAnotherProduct = false;
 
-        vendors: any[] = [];
         products: any[] = [];
+
+        get vendors() {
+            return dashboardModule.vendors;
+        }
 
         get apiBaseURL() {
             return AppConfig.api.baseURL;
         }
 
         mounted() {
-            this.refreshVendors();
+            // this.refreshVendors();
             this.refreshProducts();
         }
 
         async refreshVendors() {
-            let resData = await vendorService.getAllVendors();
-            if (resData.success) {
-                this.vendors = resData.vendors;
-            }
+            let resData = await dashboardModule.refreshVendors();
         }
 
         async refreshProducts() {
@@ -164,21 +165,15 @@
         async addNewProduct() {
             console.log(this.newProductData);
 
-            let formData = new FormData();
-            if (this.newProductData.imageFile) {
-                formData.append('imageFile', this.newProductData.imageFile);
-            }
+            let { name, price, plu, vendorId, imageFile } = this.newProductData;
 
-            let { name, price, plu, vendorId } = this.newProductData;
-
-            formData.append('_default', JSON.stringify({
+            let resData = await productService.addNewProduct({
                 name,
                 price,
                 plu,
-                vendorId
-            }));
-
-            let resData = await productService.addNewProduct(formData);
+                vendorId,
+                imageFile,
+            });
             console.log(resData);
 
             if (resData.success) {

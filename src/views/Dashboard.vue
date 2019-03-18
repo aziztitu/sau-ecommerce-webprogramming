@@ -145,6 +145,7 @@
     import NavToolbar from "@/components/common/navigation/NavToolbar.vue";
     import SnackBar, { SnackBarTypes } from "@/components/singleton/SnackBar.vue";
     import authModule, { AccountRole } from '@/store/modules/authModule';
+    import dashboardModule from '@/store/modules/dashboardModule';
 
     interface NavRouterLink {
         to: { name: string } | string;
@@ -252,8 +253,9 @@
         private async mounted() {
             this.onWindowResized();
 
+            dashboardModule.refreshDashboardData();
+
             await this.validateLoginStatus();
-            await this.fetchDashboardData();
         }
 
         private async validateLoginStatus() {
@@ -261,16 +263,6 @@
                 if (!resData.success) {
                     SnackBar.show('Session expired. Please login again.', SnackBarTypes.Error);
                     this.goToLoginScreen();
-                } */
-        }
-
-        private async fetchDashboardData() {
-            /* const resData = await accountService.fetchBasicAccountInfo(SpecialAccountIdentifiers.Me);
-                if (resData.success) {
-                    // console.log(resData.accountInfo);
-                    this.curAccount = resData.accountInfo;
-                } else {
-                    SnackBar.show(resData.message, SnackBarTypes.Error);
                 } */
         }
 

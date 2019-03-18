@@ -87,14 +87,7 @@
     import vendorService from '@/services/api/vendorService';
     import { DataTableHeader } from '@/tools/types/vuetify/additionalTypeDeclarations';
     import SnackBar from '@/components/singleton/SnackBar.vue';
-
-    class VendorData {
-        _id?: string;
-        name: string = "";
-        email: string = "";
-        phone: string = "";
-        address: string = "";
-    }
+    import dashboardModule, { VendorData } from '@/store/modules/dashboardModule';
 
     @Component({
         components: {
@@ -126,7 +119,9 @@
             }
         ];
 
-        vendors: VendorData[] = [];
+        get vendors() {
+            return dashboardModule.vendors;
+        }
 
         vendorAddDialogModel = false;
 
@@ -136,18 +131,11 @@
         isAddingVendor = false;
 
         mounted() {
-            this.refreshVendors();
+            // this.refreshVendors();
         }
 
         async refreshVendors() {
-            this.isLoadingVendors = true;
-
-            let resData = await vendorService.getAllVendors();
-            this.isLoadingVendors = false;
-
-            if (resData.success) {
-                this.vendors = resData.vendors;
-            }
+            let resData = dashboardModule.refreshVendors();
         }
 
         async addNewVendor() {
