@@ -30,7 +30,6 @@
                     >
                         <Product
                             class="mx-2"
-                            style="max-width: 232px"
                             v-model="featuredProducts[i]"
                             :portrait="true"
                             :editable="false"

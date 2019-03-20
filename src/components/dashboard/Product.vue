@@ -1,22 +1,38 @@
 <template>
-    <v-card hover style class="product">
-        <v-layout :column="portrait" :row="landscape" pa-3>
-            <div :class="`${navigable?'clickable':''}`" @click="navigateToProductDetails">
+    <v-card
+        hover
+        style
+        :class="`product ${usePortrait?'portrait':'landscape'}`"
+        v-resize="onWindowResized"
+    >
+        <v-layout
+            class="product-container"
+            :style="`${widthStyle}`"
+            :column="usePortrait"
+            :row="useLandscape"
+            pa-3
+        >
+            <v-layout
+                justify-center
+                align-center
+                :class="`product-img-wrapper ${navigable?'clickable':''}`"
+                @click="navigateToProductDetails"
+            >
                 <v-img
                     v-if="value.imageName"
                     class="product-img"
                     :src="`${apiBaseURL}/static/images/products/${value.imageName}`"
                     cover
                 ></v-img>
-                <Logo :lighter="true" v-else class="product-img"></Logo>
-            </div>
+                <Logo :lighter="true" v-else class="product-img smaller"></Logo>
+            </v-layout>
 
             <v-layout
                 column
                 class="product-info"
-                :pl-1="portrait"
-                :pt-3="portrait"
-                :pl-4="landscape"
+                :pl-1="usePortrait"
+                :pt-3="usePortrait"
+                :pl-4="useLandscape"
                 justify-start
             >
                 <v-layout column v-if="!editingData">
@@ -35,7 +51,7 @@
                     <v-btn
                         raised
                         color="accent"
-                        :class="`mt-4 mx-0 ${landscape?'fit-width':''}`"
+                        :class="`mt-4 mx-0 ${useLandscape?'fit-width':''}`"
                         @click="addProductToCart"
                     >
                         <v-icon left>add_shopping_cart</v-icon>
@@ -57,14 +73,14 @@
                     </v-layout>
                 </div>
             </v-layout>
-            <v-spacer v-if="landscape"></v-spacer>
+            <v-spacer v-if="useLandscape"></v-spacer>
             <v-layout
                 v-if="editable"
-                :row="portrait"
-                :column="landscape"
-                :justify-end="portrait"
-                :mt-4="portrait"
-                :style="`${landscape?'max-width: fit-content':'min-width: 100%'}`"
+                :row="usePortrait"
+                :column="useLandscape"
+                :justify-end="usePortrait"
+                :mt-4="usePortrait"
+                :style="`${useLandscape?'max-width: fit-content':'min-width: 100%'}`"
             >
                 <v-btn icon outline small @click="toggleEditMode" :loading="isSaving">
                     <v-icon small v-if="!editingData">edit</v-icon>
@@ -90,6 +106,7 @@
     import vendorService from '@/services/api/vendorService';
     import SnackBar, { SnackBarTypes } from '@/components/singleton/SnackBar.vue';
     import productService from '@/services/api/productService';
+    import App from '@/App.vue';
 
     export class ProductData {
         _id: string = "";
@@ -117,6 +134,16 @@
         portrait!: boolean;
 
         @Prop({
+            default: null
+        })
+        width!: string | null;
+
+        @Prop({
+            default: false,
+        })
+        disableMobileView!: boolean;
+
+        @Prop({
             default: false,
         })
         editable!: boolean;
@@ -136,6 +163,9 @@
 
         editingData: ProductData | null = null;
 
+        mobileBreakPoint = 500;
+        mobileView = false;
+
         get vendors() {
             return dashboardModule.vendors;
         }
@@ -148,8 +178,26 @@
             return AppConfig.api.baseURL;
         }
 
-        get landscape() {
-            return !this.portrait;
+        get usePortrait() {
+            return this.portrait || this.mobileView;
+        }
+
+        get useLandscape() {
+            return !this.usePortrait;
+        }
+
+        get widthStyle() {
+            if (this.width) {
+                return `min-width:${this.width}; max-width:${this.width};`;
+            } else {
+                if (this.mobileView && !this.portrait) {
+                    return `min-width:100%; max-width:100%;`;
+                }
+            }
+        }
+
+        mounted() {
+
         }
 
         async toggleEditMode(e: Event) {
@@ -221,11 +269,19 @@
         addProductToCart() {
             SnackBar.show('Coming Soon...', SnackBarTypes.Success);
         }
+
+        private onWindowResized() {
+            if (!this.disableMobileView) {
+                const wasOnMobile = this.mobileView;
+                this.mobileView = window.innerWidth < this.mobileBreakPoint;
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
     $productImageSize: 200px;
+    $productImageSmallerSize: 150px;
 
     .product {
         // border-radius: 10px;
@@ -242,20 +298,48 @@
             overflow: hidden;
         }
 
-        .product-img {
+        .product-img-wrapper {
             min-width: $productImageSize;
             max-width: $productImageSize;
             min-height: $productImageSize;
             max-height: $productImageSize;
 
-            &.v-image {
-                // border: 0.5px #777 solid;
-                border-radius: 10px;
+            .product-img {
+                min-width: $productImageSize;
+                max-width: $productImageSize;
+                min-height: $productImageSize;
+                max-height: $productImageSize;
+
+                &.v-image {
+                    // border: 0.5px #777 solid;
+                    border-radius: 10px;
+                }
+
+                &.smaller {
+                    min-width: $productImageSmallerSize;
+                    max-width: $productImageSmallerSize;
+                    min-height: $productImageSmallerSize;
+                    max-height: $productImageSmallerSize;
+                }
             }
         }
 
         .product-info {
             text-align: left;
+        }
+
+        &.portrait {
+            $productContainerWidth: 200px;
+
+            .product-container {
+                min-width: $productContainerWidth;
+                max-width: $productContainerWidth;
+
+                .product-img-wrapper {
+                    min-width: 100%;
+                    max-width: 100%;
+                }
+            }
         }
     }
 </style>
