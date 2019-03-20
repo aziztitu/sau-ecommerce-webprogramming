@@ -12,13 +12,33 @@
             <v-progress-linear indeterminate :height="2" v-if="loadingFeaturedProducts"></v-progress-linear>
             <v-divider v-else class="mt-3"></v-divider>
             <v-layout py-3 v-if="featuredProducts.length > 0" style="overflow-x: auto">
-                <v-flex class="fit-width" v-for="(featuredProduct, i) in featuredProducts" :key="i" px-2>
-                    <Product
-                        v-model="featuredProducts[i]"
-                        :portrait="true"
-                        :editable="false"
-                    ></Product>
-                </v-flex>
+                <swiper
+                    :options="{
+                        slidesPerView: 'auto',
+                        spaceBetween: 0,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true
+                        }
+                    }"
+                    class="padded"
+                >
+                    <swiper-slide
+                        v-for="(featuredProduct, i) in featuredProducts"
+                        :key="i"
+                        class="fit-width"
+                    >
+                        <Product
+                            class="mx-2"
+                            style="max-width: 232px"
+                            v-model="featuredProducts[i]"
+                            :portrait="true"
+                            :editable="false"
+                        ></Product>
+                    </swiper-slide>
+
+                    <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
             </v-layout>
             <v-layout v-else pt-2 pl-2>
                 <span class="subheading">No Featured Products Available</span>
@@ -171,6 +191,14 @@
             font-size: 64px;
             margin-top: 24px;
             margin-bottom: 24px;
+        }
+    }
+
+    .swiper-container {
+        &.padded {
+            /deep/ .swiper-wrapper {
+                padding-bottom: 50px;
+            }
         }
     }
 </style>

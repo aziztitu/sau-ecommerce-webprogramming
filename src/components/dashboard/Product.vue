@@ -8,7 +8,7 @@
                     :src="`${apiBaseURL}/static/images/products/${value.imageName}`"
                     cover
                 ></v-img>
-                <Logo :lighter="true" v-else class="product-img pa-5"></Logo>
+                <Logo :lighter="true" v-else class="product-img"></Logo>
             </div>
 
             <v-layout
