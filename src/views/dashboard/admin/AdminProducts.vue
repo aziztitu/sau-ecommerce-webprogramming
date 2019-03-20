@@ -23,9 +23,20 @@
                     </v-toolbar>
                 </v-card-title>
                 <v-card-text class="pa-0">
+                    <v-progress-linear
+                        v-if="isLoadingProducts"
+                        indeterminate
+                        height="3"
+                        color="secondary"
+                        class="mt-0"
+                    ></v-progress-linear>
                     <v-layout column v-if="products.length > 0" py-2>
                         <v-flex my-2 mx-3 xs12 v-for="(product, i) in products" :key="i">
-                            <Product :editable="true" v-model="products[i]" @onremoved="refreshProducts"></Product>
+                            <Product
+                                :editable="true"
+                                v-model="products[i]"
+                                @onremoved="refreshProducts"
+                            ></Product>
                         </v-flex>
                     </v-layout>
                     <v-layout row v-else>

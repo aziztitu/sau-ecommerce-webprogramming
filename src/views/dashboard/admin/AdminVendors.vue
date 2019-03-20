@@ -7,7 +7,13 @@
                         <v-toolbar-title>Vendors</v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-toolbar-items>
-                            <v-btn icon outline dark @click="refreshVendors">
+                            <v-btn
+                                icon
+                                outline
+                                dark
+                                @click="refreshVendors"
+                                :loading="isLoadingVendors"
+                            >
                                 <v-icon>refresh</v-icon>
                             </v-btn>
                             <v-btn icon outline dark @click="vendorAddDialogModel = true">
@@ -135,7 +141,9 @@
         }
 
         async refreshVendors() {
-            let resData = dashboardModule.refreshVendors();
+            this.isLoadingVendors = true;
+            let resData = await dashboardModule.refreshVendors();
+            this.isLoadingVendors = false;
         }
 
         async addNewVendor() {

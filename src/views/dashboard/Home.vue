@@ -5,6 +5,25 @@
                 <v-carousel-item v-for="(item, i) in headerCarouselItems" :key="i" :src="item"></v-carousel-item>
             </v-carousel>
         </v-flex>
+        <v-flex mt-5 px-2>
+            <v-layout align-start>
+                <span class="headline">Featured Items</span>
+            </v-layout>
+            <v-progress-linear indeterminate :height="2" v-if="loadingFeaturedProducts"></v-progress-linear>
+            <v-divider v-else class="mt-3"></v-divider>
+            <v-layout py-3 v-if="featuredProducts.length > 0" style="overflow-x: auto">
+                <v-flex class="fit-width" v-for="(featuredProduct, i) in featuredProducts" :key="i" px-2>
+                    <Product
+                        v-model="featuredProducts[i]"
+                        :portrait="true"
+                        :editable="false"
+                    ></Product>
+                </v-flex>
+            </v-layout>
+            <v-layout v-else pt-2 pl-2>
+                <span class="subheading">No Featured Products Available</span>
+            </v-layout>
+        </v-flex>
         <v-flex mt-5>
             <v-layout row wrap>
                 <v-flex xs12 md4 pa-2>
@@ -44,7 +63,8 @@
                         <v-divider></v-divider>
 
                         <v-card-text style="text-align: left">
-                            <span class="body-1"
+                            <span
+                                class="body-1"
                             >Get all the best deals & promotions right on your screen. Don't miss out on your chance to save more.</span>
                         </v-card-text>
 
@@ -68,9 +88,9 @@
                         <v-divider></v-divider>
 
                         <v-card-text style="text-align: left">
-                            <span class="body-1">
-                                Introducing Grocery Points! Everytime you purchase groceries online, you are rewarded with Grocery Points, which you can redeem for future purchases.
-                            </span>
+                            <span
+                                class="body-1"
+                            >Introducing Grocery Points! Everytime you purchase groceries online, you are rewarded with Grocery Points, which you can redeem for future purchases.</span>
                         </v-card-text>
 
                         <v-card-actions>
@@ -91,11 +111,14 @@
     import App, { AppEventType } from '@/App.vue';
     import Logo from '@/components/common/app/Logo.vue';
     import Placeholder from '@/views/misc/Placeholder.vue';
+    import Product, { ProductData } from '@/components/dashboard/Product.vue';
+    import productService from '@/services/api/productService';
 
     @Component({
         components: {
             Logo,
             Placeholder,
+            Product,
         },
     })
     export default class Home extends Vue {
@@ -116,13 +139,28 @@
             "/images/background/anne-preble-198119-unsplash.jpg",
         ];
 
+        loadingFeaturedProducts = false;
+
+        featuredProducts: ProductData[] = [];
+
         private mounted() {
             this.onWindowResized();
+            this.refreshFeaturedProducts();
         }
 
         private onWindowResized() {
             const wasOnMobile = this.isOnMobile;
             this.isOnMobile = window.innerWidth < this.mobileBreakPoint;
+        }
+
+        async refreshFeaturedProducts() {
+            this.loadingFeaturedProducts = true;
+            let resData = await productService.getAllProducts();
+            this.loadingFeaturedProducts = false;
+
+            if (resData.success) {
+                this.featuredProducts = resData.products;
+            }
         }
     }
 </script>

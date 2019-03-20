@@ -1,25 +1,47 @@
 <template>
     <v-card hover style class="product">
-        <v-layout row pa-3>
-            <v-img
-                v-if="value.imageName"
-                class="product-img"
-                :src="`${apiBaseURL}/static/images/products/${value.imageName}`"
-                cover
-            ></v-img>
-            <Logo :lighter="true" v-else class="product-img pa-5"></Logo>
-            <!-- <v-img v-else
-                class="product-img"
-                :src="`https://www.leeroy.ca/static/src/assets/images/collections/orange-investments.jpg`"
-                contain
-            ></v-img>-->
-            <v-layout column class="product-info" pl-4 justify-start>
-                <div v-if="!editingData">
-                    <div class="headline mb-3">{{value.name}}</div>
-                    <div class="subheading">Price: ${{value.price}}</div>
-                    <div class="subheading">PLU: {{value.plu}}</div>
-                    <div class="subheading">Vendor: {{vendor?vendor.name:''}}</div>
-                </div>
+        <v-layout :column="portrait" :row="landscape" pa-3>
+            <div :class="`${navigable?'clickable':''}`" @click="navigateToProductDetails">
+                <v-img
+                    v-if="value.imageName"
+                    class="product-img"
+                    :src="`${apiBaseURL}/static/images/products/${value.imageName}`"
+                    cover
+                ></v-img>
+                <Logo :lighter="true" v-else class="product-img pa-5"></Logo>
+            </div>
+
+            <v-layout
+                column
+                class="product-info"
+                :pl-1="portrait"
+                :pt-3="portrait"
+                :pl-4="landscape"
+                justify-start
+            >
+                <v-layout column v-if="!editingData">
+                    <v-layout align-center mb-1 class="fit-height">
+                        <div
+                            :class="`headline ${navigable?'clickable':''}`"
+                            @click="navigateToProductDetails"
+                        >{{value.name}}</div>
+                        <v-spacer></v-spacer>
+                    </v-layout>
+                    <v-divider></v-divider>
+                    <div class="title mt-3 mb-2">${{value.price}}</div>
+                    <div class="subheading">#{{value.plu}}</div>
+                    <div class="subheading">by {{vendor?vendor.name:''}}</div>
+
+                    <v-btn
+                        raised
+                        color="accent"
+                        :class="`mt-4 mx-0 ${landscape?'fit-width':''}`"
+                        @click="addProductToCart"
+                    >
+                        <v-icon left>add_shopping_cart</v-icon>
+                        <span>Add to Cart</span>
+                    </v-btn>
+                </v-layout>
                 <div v-else>
                     <v-layout column>
                         <v-text-field label="Name" v-model="editingData.name"></v-text-field>
@@ -35,8 +57,15 @@
                     </v-layout>
                 </div>
             </v-layout>
-            <v-spacer></v-spacer>
-            <v-layout v-if="editable" column style="max-width: fit-content">
+            <v-spacer v-if="landscape"></v-spacer>
+            <v-layout
+                v-if="editable"
+                :row="portrait"
+                :column="landscape"
+                :justify-end="portrait"
+                :mt-4="portrait"
+                :style="`${landscape?'max-width: fit-content':'min-width: 100%'}`"
+            >
                 <v-btn icon outline small @click="toggleEditMode" :loading="isSaving">
                     <v-icon small v-if="!editingData">edit</v-icon>
                     <v-icon small v-else>save</v-icon>
@@ -59,7 +88,7 @@
     import dashboardModule from '@/store/modules/dashboardModule';
     import lodash from 'lodash';
     import vendorService from '@/services/api/vendorService';
-    import SnackBar from '@/components/singleton/SnackBar.vue';
+    import SnackBar, { SnackBarTypes } from '@/components/singleton/SnackBar.vue';
     import productService from '@/services/api/productService';
 
     export class ProductData {
@@ -85,7 +114,22 @@
         @Prop({
             default: false,
         })
+        portrait!: boolean;
+
+        @Prop({
+            default: false,
+        })
         editable!: boolean;
+
+        @Prop({
+            default: true,
+        })
+        navigable!: boolean;
+
+        @Prop({
+            default: false,
+        })
+        detailed!: boolean;
 
         isSaving = false;
         isRemoving = false;
@@ -104,7 +148,15 @@
             return AppConfig.api.baseURL;
         }
 
-        async toggleEditMode() {
+        get landscape() {
+            return !this.portrait;
+        }
+
+        async toggleEditMode(e: Event) {
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
             if (this.editingData) {
                 this.isSaving = true;
 
@@ -128,20 +180,46 @@
             } else {
                 this.editingData = lodash.cloneDeep(this.value);
             }
+
+            return false;
         }
 
-        async removeProduct() {
+        async removeProduct(e: Event) {
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            this.isRemoving = true;
             let resData = await productService.removeProduct(this.value._id);
+            this.isRemoving = false;
+
             if (resData.success) {
                 this.$emit('onremoved', this.value);
             } else {
                 SnackBar.show(resData.message);
             }
+
+            return false;
         }
 
         @Emit('input')
         emitAsInput(val: any) {
             return val;
+        }
+
+        navigateToProductDetails() {
+            if (this.navigable) {
+                this.$router.push({
+                    name: 'productDetails',
+                    params: {
+                        productId: this.value._id,
+                    },
+                });
+            }
+        }
+
+        addProductToCart() {
+            SnackBar.show('Coming Soon...', SnackBarTypes.Success);
         }
     }
 </script>
@@ -149,6 +227,8 @@
 <style lang="scss" scoped>
     .product {
         // border-radius: 10px;
+        max-height: fit-content;
+        cursor: inherit;
     }
 
     .product-img {
@@ -160,7 +240,7 @@
 
         &.v-image {
             // border: 0.5px #777 solid;
-            border-radius: 20px;
+            border-radius: 10px;
         }
     }
 

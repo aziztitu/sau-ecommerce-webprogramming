@@ -75,4 +75,9 @@ export default {
         let res = await Api.instance.post<ApiResponseData>(`products/select/${productId}/remove`);
         return res.data;
     },
+
+    async getProductDetails(productId: string) {
+        let res = await Api.instance.get<ApiResponseData>(`products/select/${productId}/details`);
+        return res.data;
+    },
 };

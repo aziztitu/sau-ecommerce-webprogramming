@@ -52,12 +52,27 @@ html {
     height: 100% !important;
 }
 
+.fit-height {
+    max-height: fit-content !important;
+}
+
+.fit-width {
+    max-width: fit-content !important;
+}
+
 .center-text {
     text-align: center;
 }
 
 span.dark {
     color: white !important;
+}
+
+.clickable {
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
 }
 
 /* ====================================================================================================== */

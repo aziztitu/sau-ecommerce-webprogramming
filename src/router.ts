@@ -7,6 +7,7 @@ import Home from '@/views/dashboard/Home.vue';
 import Shop from '@/views/dashboard/Shop.vue';
 import Cart from '@/views/dashboard/Cart.vue';
 import About from '@/views/dashboard/About.vue';
+import ProductDetails from '@/views/dashboard/ProductDetails.vue';
 import Admin from '@/views/dashboard/Admin.vue';
 
 import AdminHome from '@/views/dashboard/admin/AdminHome.vue';
@@ -56,6 +57,11 @@ export default new Router({
                     path: 'about',
                     name: 'about',
                     component: About,
+                },
+                {
+                    path: 'product/:productId/details',
+                    name: 'productDetails',
+                    component: ProductDetails,
                 },
                 {
                     path: 'admin',
