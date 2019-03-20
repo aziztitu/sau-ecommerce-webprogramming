@@ -22,7 +22,7 @@
                 <v-layout column v-if="!editingData">
                     <v-layout align-center mb-1 class="fit-height">
                         <div
-                            :class="`headline ${navigable?'clickable':''}`"
+                            :class="`product-name subheading ${navigable?'clickable':''}`"
                             @click="navigateToProductDetails"
                         >{{value.name}}</div>
                         <v-spacer></v-spacer>
@@ -225,26 +225,37 @@
 </script>
 
 <style lang="scss" scoped>
+    $productImageSize: 200px;
+
     .product {
         // border-radius: 10px;
         max-height: fit-content;
         cursor: inherit;
-    }
 
-    .product-img {
-        $productImageSize: 200px;
-        min-width: $productImageSize;
-        max-width: $productImageSize;
-        min-height: $productImageSize;
-        max-height: $productImageSize;
-
-        &.v-image {
-            // border: 0.5px #777 solid;
-            border-radius: 10px;
+        .product-name {
+            font-weight: 500;
+            // white-space: nowrap;
+            text-overflow: ellipsis;
+            // width: $productImageSize;
+            height: 28px;
+            display: block;
+            overflow: hidden;
         }
-    }
 
-    .product-info {
-        text-align: left;
+        .product-img {
+            min-width: $productImageSize;
+            max-width: $productImageSize;
+            min-height: $productImageSize;
+            max-height: $productImageSize;
+
+            &.v-image {
+                // border: 0.5px #777 solid;
+                border-radius: 10px;
+            }
+        }
+
+        .product-info {
+            text-align: left;
+        }
     }
 </style>
