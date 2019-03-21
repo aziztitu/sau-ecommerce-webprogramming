@@ -2,15 +2,14 @@
     <v-card
         hover
         style
-        :class="`product ${usePortrait?'portrait':'landscape'}`"
+        :class="`product pa-3 ${smartPortrait?'portrait':'landscape'}`"
         v-resize="onWindowResized"
     >
         <v-layout
             class="product-container"
             :style="`${widthStyle}`"
-            :column="usePortrait"
-            :row="useLandscape"
-            pa-3
+            :column="smartPortrait"
+            :row="smartLandscape"
         >
             <v-layout
                 justify-center
@@ -30,15 +29,16 @@
             <v-layout
                 column
                 class="product-info"
-                :pl-1="usePortrait"
-                :pt-3="usePortrait"
-                :pl-4="useLandscape"
+                :pl-1="smartPortrait"
+                :pt-3="smartPortrait"
+                :pl-4="smartLandscape"
+                :pt-1="smartLandscape"
                 justify-start
             >
                 <v-layout column v-if="!editingData">
                     <v-layout align-center mb-1 class="fit-height">
                         <div
-                            :class="`product-name subheading ${navigable?'clickable':''}`"
+                            :class="`product-name ${smartPortrait?'subheading':'title'} ${navigable?'clickable':''}`"
                             @click="navigateToProductDetails"
                         >{{value.name}}</div>
                         <v-spacer></v-spacer>
@@ -51,7 +51,7 @@
                     <v-btn
                         raised
                         color="accent"
-                        :class="`mt-4 mx-0 ${useLandscape?'fit-width':''}`"
+                        :class="`mt-4 mx-0 ${smartLandscape?'fit-width':''}`"
                         @click="addProductToCart"
                     >
                         <v-icon left>add_shopping_cart</v-icon>
@@ -73,14 +73,14 @@
                     </v-layout>
                 </div>
             </v-layout>
-            <v-spacer v-if="useLandscape"></v-spacer>
+            <v-spacer v-if="smartLandscape"></v-spacer>
             <v-layout
                 v-if="editable"
-                :row="usePortrait"
-                :column="useLandscape"
-                :justify-end="usePortrait"
-                :mt-4="usePortrait"
-                :style="`${useLandscape?'max-width: fit-content':'min-width: 100%'}`"
+                :row="smartPortrait"
+                :column="smartLandscape"
+                :justify-end="smartPortrait"
+                :mt-4="smartPortrait"
+                :style="`${smartLandscape?'max-width: fit-content':'min-width: 100%'}`"
             >
                 <v-btn icon outline small @click="toggleEditMode" :loading="isSaving">
                     <v-icon small v-if="!editingData">edit</v-icon>
@@ -178,12 +178,12 @@
             return AppConfig.api.baseURL;
         }
 
-        get usePortrait() {
+        get smartPortrait() {
             return this.portrait || this.mobileView;
         }
 
-        get useLandscape() {
-            return !this.usePortrait;
+        get smartLandscape() {
+            return !this.smartPortrait;
         }
 
         get widthStyle() {
@@ -290,12 +290,6 @@
 
         .product-name {
             font-weight: 500;
-            // white-space: nowrap;
-            text-overflow: ellipsis;
-            // width: $productImageSize;
-            height: 28px;
-            display: block;
-            overflow: hidden;
         }
 
         .product-img-wrapper {
@@ -338,6 +332,15 @@
                 .product-img-wrapper {
                     min-width: 100%;
                     max-width: 100%;
+                }
+
+                .product-name {
+                    height: 28px;
+                    // white-space: nowrap;
+                    text-overflow: ellipsis;
+                    // width: $productImageSize;
+                    display: block;
+                    overflow: hidden;
                 }
             }
         }
