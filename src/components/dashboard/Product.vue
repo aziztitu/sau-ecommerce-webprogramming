@@ -5,90 +5,117 @@
         :class="`product pa-3 ${smartPortrait?'portrait':'landscape'}`"
         v-resize="onWindowResized"
     >
-        <v-layout
-            class="product-container"
-            :style="`${widthStyle}`"
-            :column="smartPortrait"
-            :row="smartLandscape"
-        >
+        <v-layout column>
             <v-layout
-                justify-center
-                align-center
-                :class="`product-img-wrapper ${navigable?'clickable':''}`"
-                @click="navigateToProductDetails"
+                class="product-container"
+                :style="`${widthStyle}`"
+                :column="smartPortrait"
+                :row="smartLandscape"
             >
-                <v-img
-                    v-if="value.imageName"
-                    class="product-img"
-                    :src="`${apiBaseURL}/static/images/products/${value.imageName}`"
-                    cover
-                ></v-img>
-                <Logo :lighter="true" v-else class="product-img smaller"></Logo>
-            </v-layout>
+                <v-layout
+                    justify-center
+                    align-center
+                    :class="`product-img-wrapper ${navigable?'clickable':''}`"
+                    @click="navigateToProductDetails"
+                >
+                    <v-img
+                        v-if="value.imageName"
+                        class="product-img"
+                        :src="`${apiBaseURL}/static/images/products/${value.imageName}`"
+                        cover
+                    ></v-img>
+                    <Logo :lighter="true" v-else class="product-img smaller"></Logo>
+                </v-layout>
 
-            <v-layout
-                column
-                class="product-info"
-                :pl-1="smartPortrait"
-                :pt-3="smartPortrait"
-                :pl-4="smartLandscape"
-                :pt-1="smartLandscape"
-                justify-start
-            >
-                <v-layout column v-if="!editingData">
-                    <v-layout align-center mb-1 class="fit-height">
-                        <div
-                            :class="`product-name ${smartPortrait?'subheading':'title'} ${navigable?'clickable':''}`"
-                            @click="navigateToProductDetails"
-                        >{{value.name}}</div>
-                        <v-spacer></v-spacer>
+                <v-layout
+                    column
+                    class="product-info"
+                    :pl-1="smartPortrait"
+                    :pt-3="smartPortrait"
+                    :pl-4="smartLandscape"
+                    :pt-1="smartLandscape"
+                    justify-start
+                >
+                    <v-layout column v-if="!editingData">
+                        <v-layout align-center mb-1 class="fit-height">
+                            <div
+                                :class="`product-name ${smartPortrait?'subheading':'title'} ${navigable?'clickable':''}`"
+                                @click="navigateToProductDetails"
+                            >{{value.name}}</div>
+                            <v-spacer></v-spacer>
+                        </v-layout>
+                        <v-divider></v-divider>
+                        <div class="title mt-3 mb-2">${{value.price}}</div>
+                        <div class="subheading mb-1" v-if="showDescription">{{value.description}}</div>
+                        <div class="subheading">#{{value.plu}}</div>
+                        <div class="subheading">by {{vendor?vendor.name:''}}</div>
+
+                        <v-btn
+                            raised
+                            color="accent"
+                            :class="`mt-4 mx-0 ${smartLandscape?'fit-width':''}`"
+                            @click="addProductToCart"
+                        >
+                            <v-icon left>add_shopping_cart</v-icon>
+                            <span>Add to Cart</span>
+                        </v-btn>
                     </v-layout>
-                    <v-divider></v-divider>
-                    <div class="title mt-3 mb-2">${{value.price}}</div>
-                    <div class="subheading">#{{value.plu}}</div>
-                    <div class="subheading">by {{vendor?vendor.name:''}}</div>
-
+                    <div v-else>
+                        <v-layout column>
+                            <v-text-field label="Name" v-model="editingData.name"></v-text-field>
+                            <v-text-field label="Price" v-model="editingData.price"></v-text-field>
+                            <v-text-field label="PLU" v-model="editingData.plu"></v-text-field>
+                            <v-text-field label="Description" v-model="editingData.description"></v-text-field>
+                            <v-select
+                                v-model="editingData.vendorId"
+                                :items="vendors"
+                                item-text="name"
+                                item-value="_id"
+                                label="Vendor"
+                            ></v-select>
+                        </v-layout>
+                    </div>
+                </v-layout>
+                <v-spacer v-if="smartLandscape"></v-spacer>
+                <v-layout
+                    v-if="editable"
+                    :row="smartPortrait"
+                    :column="smartLandscape"
+                    :justify-end="smartPortrait"
+                    :mt-4="smartPortrait"
+                    :style="`${smartLandscape?'max-width: fit-content':'min-width: 100%'}`"
+                >
+                    <v-btn icon outline small @click="toggleEditMode" :loading="isSaving">
+                        <v-icon small v-if="!editingData">edit</v-icon>
+                        <v-icon small v-else>save</v-icon>
+                    </v-btn>
                     <v-btn
-                        raised
-                        color="accent"
-                        :class="`mt-4 mx-0 ${smartLandscape?'fit-width':''}`"
-                        @click="addProductToCart"
+                        icon
+                        outline
+                        small
+                        color="red"
+                        @click="removeProduct"
+                        :loading="isRemoving"
                     >
-                        <v-icon left>add_shopping_cart</v-icon>
-                        <span>Add to Cart</span>
+                        <v-icon small>delete</v-icon>
                     </v-btn>
                 </v-layout>
-                <div v-else>
-                    <v-layout column>
-                        <v-text-field label="Name" v-model="editingData.name"></v-text-field>
-                        <v-text-field label="Price" v-model="editingData.price"></v-text-field>
-                        <v-text-field label="PLU" v-model="editingData.plu"></v-text-field>
-                        <v-select
-                            v-model="editingData.vendorId"
-                            :items="vendors"
-                            item-text="name"
-                            item-value="_id"
-                            label="Vendor"
-                        ></v-select>
-                    </v-layout>
-                </div>
             </v-layout>
-            <v-spacer v-if="smartLandscape"></v-spacer>
-            <v-layout
-                v-if="editable"
-                :row="smartPortrait"
-                :column="smartLandscape"
-                :justify-end="smartPortrait"
-                :mt-4="smartPortrait"
-                :style="`${smartLandscape?'max-width: fit-content':'min-width: 100%'}`"
-            >
-                <v-btn icon outline small @click="toggleEditMode" :loading="isSaving">
-                    <v-icon small v-if="!editingData">edit</v-icon>
-                    <v-icon small v-else>save</v-icon>
-                </v-btn>
-                <v-btn icon outline small color="red" @click="removeProduct" :loading="isRemoving">
-                    <v-icon small>delete</v-icon>
-                </v-btn>
+            <v-layout>
+                <v-layout
+                    column
+                    v-if="detailed && !editingData && value.detailHTML.length > 0"
+                    mt-4
+                    align-start
+                >
+                    <span class="title">Product Details</span>
+                    <v-divider class="max-width my-2"></v-divider>
+                    <v-flex v-html="value.detailHTML" mt-2></v-flex>
+                </v-layout>
+
+                <v-layout v-if="editingData">
+                    <HTMLInputField label="Detail HTML" :livePreview="true" v-model="editingData.detailHTML"></HTMLInputField>
+                </v-layout>
             </v-layout>
         </v-layout>
     </v-card>
@@ -105,21 +132,14 @@
     import lodash from 'lodash';
     import vendorService from '@/services/api/vendorService';
     import SnackBar, { SnackBarTypes } from '@/components/singleton/SnackBar.vue';
-    import productService from '@/services/api/productService';
+    import productService, { ProductData } from '@/services/api/productService';
     import App from '@/App.vue';
-
-    export class ProductData {
-        _id: string = "";
-        name: string = "";
-        price: number = 0;
-        plu: string = "";
-        imageFile: File | null = null;
-        vendorId: string = "";
-    }
+    import HTMLInputField from '@/components/common/form/HTMLInputField.vue';
 
     @Component({
         components: {
             Logo,
+            HTMLInputField
         }
     })
     export default class Product extends Vue {
@@ -152,6 +172,11 @@
             default: true,
         })
         navigable!: boolean;
+
+        @Prop({
+            default: true,
+        })
+        showDescription!: boolean;
 
         @Prop({
             default: false,
@@ -197,7 +222,6 @@
         }
 
         mounted() {
-
         }
 
         async toggleEditMode(e: Event) {
@@ -208,14 +232,7 @@
             if (this.editingData) {
                 this.isSaving = true;
 
-                let { name, price, plu, vendorId, imageFile } = this.editingData;
-
-                let resData = await productService.updateProduct(this.editingData._id!, {
-                    name,
-                    price,
-                    plu,
-                    vendorId
-                });
+                let resData = await productService.updateProduct(this.editingData._id!, this.editingData);
 
                 if (resData.success) {
                     this.emitAsInput(this.editingData);

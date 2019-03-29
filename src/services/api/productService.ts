@@ -1,5 +1,16 @@
 import { Api } from './Api';
 import { ApiResponseData } from '@/tools/types/api';
+import lodash from 'lodash';
+
+export class ProductData {
+    _id: string = '';
+    name: string = '';
+    price: number = 0;
+    plu: string = '';
+    imageFile: File | null = null;
+    vendorId: string = '';
+    description: string = '';
+}
 
 export default {
     async getAllProducts() {
@@ -7,14 +18,8 @@ export default {
         return res.data;
     },
 
-    async addNewProduct(productData: {
-        name: string;
-        price: number;
-        plu: string;
-        vendorId: string;
-        imageFile?: File | null;
-    }) {
-        let { name, price, plu, vendorId, imageFile } = productData;
+    async addNewProduct(productData: PartialOmit<ProductData, '_id'>) {
+        let { imageFile } = productData;
 
         let formData = new FormData();
 
@@ -22,31 +27,17 @@ export default {
             formData.append('imageFile', imageFile);
         }
 
-        formData.append(
-            '_default',
-            JSON.stringify({
-                name,
-                price,
-                plu,
-                vendorId,
-            })
-        );
+        let reqData = lodash.cloneDeep(productData);
+        reqData = lodash.omit(reqData, '_id');
+
+        formData.append('_default', JSON.stringify(reqData));
 
         let res = await Api.instance.put<ApiResponseData>('products/new', formData);
         return res.data;
     },
 
-    async updateProduct(
-        productId: string,
-        productData: {
-            name: string;
-            price: number;
-            plu: string;
-            vendorId: string;
-            imageFile?: File | null;
-        }
-    ) {
-        let { name, price, plu, vendorId, imageFile } = productData;
+    async updateProduct(productId: string, productData: PartialOmit<ProductData, "_id">) {
+        let { imageFile } = productData;
 
         let formData = new FormData();
 
@@ -54,15 +45,10 @@ export default {
             formData.append('imageFile', imageFile);
         }
 
-        formData.append(
-            '_default',
-            JSON.stringify({
-                name,
-                price,
-                plu,
-                vendorId,
-            })
-        );
+        let reqData = lodash.cloneDeep(productData);
+        reqData = lodash.omit(reqData, '_id');
+
+        formData.append('_default', JSON.stringify(reqData));
 
         let res = await Api.instance.post<ApiResponseData>(
             `products/select/${productId}/update`,

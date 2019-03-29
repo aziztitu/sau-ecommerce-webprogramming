@@ -33,6 +33,7 @@
                             v-model="featuredProducts[i]"
                             :portrait="true"
                             :editable="false"
+                            :showDescription="false"
                         ></Product>
                     </swiper-slide>
 
@@ -130,8 +131,8 @@
     import App, { AppEventType } from '@/App.vue';
     import Logo from '@/components/common/app/Logo.vue';
     import Placeholder from '@/views/misc/Placeholder.vue';
-    import Product, { ProductData } from '@/components/dashboard/Product.vue';
-    import productService from '@/services/api/productService';
+    import Product from '@/components/dashboard/Product.vue';
+    import productService,{ ProductData } from '@/services/api/productService';
 
     @Component({
         components: {
