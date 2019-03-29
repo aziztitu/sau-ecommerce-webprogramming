@@ -9,7 +9,7 @@
                 @click:append="previewMode = true;"
             ></v-textarea>
         </v-flex>
-        <v-layout xs12 :md6="!previewBelow" column v-show="livePreview || previewMode" justify-start pa-2>
+        <v-flex xs12 :md6="!previewBelow" column v-show="livePreview || previewMode" justify-start pa-2>
             <div class="max-width">
                 <v-layout justify-space-between pt-1>
                     <span>{{$attrs.label || ''}} (Preview)</span>
@@ -21,9 +21,9 @@
                 </v-layout>
             </div>
             <div>
-                <v-layout mt-1 v-html="htmlString.length > 0?htmlString:'<i>None</i>'"></v-layout>
+                <v-flex mt-1 style="text-align: left; max-width: 100%;" v-html="htmlString.length > 0?htmlString:'<i>None</i>'"></v-flex>
             </div>
-        </v-layout>
+        </v-flex>
     </v-layout>
 </template>
 

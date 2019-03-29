@@ -106,14 +106,15 @@
                     column
                     v-if="detailed && !editingData && value.detailHTML.length > 0"
                     mt-4
+                    px-2
                     align-start
                 >
                     <span class="title">Product Details</span>
                     <v-divider class="max-width my-2"></v-divider>
-                    <v-flex v-html="value.detailHTML" mt-2></v-flex>
+                    <v-flex style="text-align: left" v-html="value.detailHTML" mt-2></v-flex>
                 </v-layout>
 
-                <v-layout v-if="editingData">
+                <v-layout v-if="editingData" justify-start align-start>
                     <HTMLInputField label="Detail HTML" :livePreview="true" v-model="editingData.detailHTML"></HTMLInputField>
                 </v-layout>
             </v-layout>
