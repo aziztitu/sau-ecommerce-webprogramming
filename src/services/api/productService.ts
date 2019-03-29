@@ -10,6 +10,7 @@ export class ProductData {
     imageFile: File | null = null;
     vendorId: string = '';
     description: string = '';
+    detailHTML: string = '';
 }
 
 export default {

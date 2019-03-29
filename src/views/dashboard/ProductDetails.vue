@@ -14,8 +14,8 @@
 <script lang='ts'>
     import Vue from 'vue';
     import Component from 'vue-class-component';
-    import Product, { ProductData } from '@/components/dashboard/Product.vue';
-    import productService from '@/services/api/productService';
+    import Product from '@/components/dashboard/Product.vue';
+    import productService,{ ProductData } from '@/services/api/productService';
     import SnackBar from '@/components/singleton/SnackBar.vue';
 
     @Component({

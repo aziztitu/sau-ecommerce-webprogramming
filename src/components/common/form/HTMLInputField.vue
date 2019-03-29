@@ -1,6 +1,6 @@
 <template>
     <v-layout row wrap>
-        <v-flex xs12 md6 v-show="livePreview || !previewMode" pa-2>
+        <v-flex xs12 :md6="!previewBelow" v-show="livePreview || !previewMode" pa-2>
             <v-textarea
                 :value="value"
                 v-bind="$attrs"
@@ -9,7 +9,7 @@
                 @click:append="previewMode = true;"
             ></v-textarea>
         </v-flex>
-        <v-layout xs12 md6 column v-show="livePreview || previewMode" justify-start pa-2>
+        <v-layout xs12 :md6="!previewBelow" column v-show="livePreview || previewMode" justify-start pa-2>
             <div class="max-width">
                 <v-layout justify-space-between pt-1>
                     <span>{{$attrs.label || ''}} (Preview)</span>
@@ -21,7 +21,7 @@
                 </v-layout>
             </div>
             <div>
-                <v-layout v-html="htmlString"></v-layout>
+                <v-layout mt-1 v-html="htmlString.length > 0?htmlString:'<i>None</i>'"></v-layout>
             </div>
         </v-layout>
     </v-layout>
@@ -45,6 +45,11 @@
             default: true,
         })
         livePreview!: boolean;
+
+        @Prop({
+            default: false,
+        })
+        previewBelow!: boolean;
 
         htmlString = this.value;
         previewMode = false;

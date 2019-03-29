@@ -81,6 +81,14 @@
                                     ></FilePicker>
                                 </v-flex>
                                 <v-flex xs12>
+                                    <HTMLInputField
+                                        label="Detail HTML"
+                                        :livePreview="true"
+                                        :previewBelow="true"
+                                        v-model="newProductData.detailHTML"
+                                    ></HTMLInputField>
+                                </v-flex>
+                                <v-flex xs12 mt-2>
                                     <v-select
                                         :items="vendors"
                                         v-model="newProductData.vendorId"
@@ -120,18 +128,20 @@
     import Component from 'vue-class-component';
     import Placeholder from '@/views/misc/Placeholder.vue';
     import vendorService from '@/services/api/vendorService';
-    import productService,{ ProductData } from '@/services/api/productService';
+    import productService, { ProductData } from '@/services/api/productService';
     import FilePicker from '@/components/common/form/FilePicker.vue';
     import AppConfig from '@/AppConfig';
     import Product from '@/components/dashboard/Product.vue';
     import dashboardModule from '@/store/modules/dashboardModule';
+    import HTMLInputField from '@/components/common/form/HTMLInputField.vue';
 
 
     @Component({
         components: {
             Placeholder,
             FilePicker,
-            Product
+            Product,
+            HTMLInputField,
         }
     })
     export default class AdminProducts extends Vue {
@@ -177,15 +187,7 @@
         async addNewProduct() {
             console.log(this.newProductData);
 
-            let { name, price, plu, vendorId, imageFile } = this.newProductData;
-
-            let resData = await productService.addNewProduct({
-                name,
-                price,
-                plu,
-                vendorId,
-                imageFile,
-            });
+            let resData = await productService.addNewProduct(this.newProductData);
             console.log(resData);
 
             if (resData.success) {
