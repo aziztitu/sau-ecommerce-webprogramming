@@ -9,3 +9,14 @@ $accentColor: material-color('orange', 'a400');
 $border-tiny: 2px;
 $border-small: 3px;
 $border-medium: 5px;
+
+$materialIconFont: 'Material+Icons';
+
+$latoFont: 'Lato:300,400,700,900';
+$dosisFont: 'Dosis:400,500,600,700';
+$poppinsFont: 'Poppins:200,300,400,500,600,700,800';
+$quicksandFont: 'Quicksand:300,400,500,700';
+$ubuntuFont: 'Ubuntu:300,400,500,700';
+
+// $googleFontList: $dosisFont + '|' + $poppinsFont + '|' + $quicksandFont + '|' + $ubuntuFont;
+$googleFontList: $materialIconFont + '|' + $latoFont;

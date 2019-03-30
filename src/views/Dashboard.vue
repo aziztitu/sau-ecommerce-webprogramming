@@ -323,6 +323,12 @@
             .router-link-active {
                 border-right: $accentColor solid $border-small;
                 background-color: rgba(127, 127, 127, 0.15);
+
+                .v-list__tile {
+                    .v-list__tile__title {
+                        font-weight: 600;
+                    }
+                }
             }
         }
     }

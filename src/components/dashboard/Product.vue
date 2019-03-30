@@ -39,13 +39,13 @@
                     <v-layout column v-if="!editingData">
                         <v-layout align-center mb-1 class="fit-height">
                             <div
-                                :class="`product-name ${smartPortrait?'subheading':'title'} ${navigable?'clickable':''}`"
+                                :class="`product-name ${'title'} ${navigable?'clickable':''}`"
                                 @click="navigateToProductDetails"
                             >{{value.name}}</div>
                             <v-spacer></v-spacer>
                         </v-layout>
                         <v-divider></v-divider>
-                        <div class="title mt-3 mb-2">${{value.price}}</div>
+                        <div class="title mt-3 mb-2 fw-600">${{value.price}}</div>
                         <div class="subheading mb-1" v-if="showDescription">{{value.description}}</div>
                         <div class="subheading">#{{value.plu}}</div>
                         <div class="subheading">by {{vendor?vendor.name:''}}</div>
@@ -57,7 +57,7 @@
                             @click="addProductToCart"
                         >
                             <v-icon left>add_shopping_cart</v-icon>
-                            <span>Add to Cart</span>
+                            <span class="fw-600">Add to Cart</span>
                         </v-btn>
                     </v-layout>
                     <div v-else>

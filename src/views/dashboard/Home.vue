@@ -1,7 +1,11 @@
 <template>
     <v-layout column v-resize="onWindowResized">
+        <v-flex class="" :style="`font-size: ${isOnMobile?'20':'22'}px`" mb-4>
+            Welcome to
+            <b>{{appTitle}}</b>. Shop for the lowest prices at your comfort.
+        </v-flex>
         <v-flex>
-            <v-carousel :height="isOnMobile?200:300">
+            <v-carousel :height="isOnMobile?200:300" class="ad-carousel">
                 <v-carousel-item v-for="(item, i) in headerCarouselItems" :key="i" :src="item"></v-carousel-item>
             </v-carousel>
         </v-flex>
@@ -65,7 +69,8 @@
 
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" flat>Shop Now
+                            <v-btn color="primary" flat>
+                                Shop Now
                                 <v-icon right>arrow_forward</v-icon>
                             </v-btn>
                         </v-card-actions>
@@ -90,7 +95,8 @@
 
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" flat>View Deals
+                            <v-btn color="primary" flat>
+                                View Deals
                                 <v-icon right>arrow_forward</v-icon>
                             </v-btn>
                         </v-card-actions>
@@ -115,7 +121,8 @@
 
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" flat>View My GP
+                            <v-btn color="primary" flat>
+                                View My GP
                                 <v-icon right>arrow_forward</v-icon>
                             </v-btn>
                         </v-card-actions>
@@ -132,7 +139,8 @@
     import Logo from '@/components/common/app/Logo.vue';
     import Placeholder from '@/views/misc/Placeholder.vue';
     import Product from '@/components/dashboard/Product.vue';
-    import productService,{ ProductData } from '@/services/api/productService';
+    import productService, { ProductData } from '@/services/api/productService';
+    import AppConfig from '@/AppConfig';
 
     @Component({
         components: {
@@ -148,20 +156,24 @@
 
         private headerCarouselItems = [
             "/images/headers/header1.jpg",
-            "/images/headers/header2.jpg",
-            "/images/headers/header3.jpg",
             "/images/background/clark-young-143622-unsplash.jpg",
+            "/images/headers/header2.jpg",
             "/images/background/jordan-madrid-1176338-unsplash.jpg",
-            // "/images/background/morgan-von-gunten-1235413-unsplash.jpg",
-            "/images/background/scott-warman-525481-unsplash.jpg",
-            "/images/background/rawpixel-973112-unsplash.jpg",
-            "/images/background/fikri-rasyid-786614-unsplash.jpg",
+            "/images/headers/header3.jpg",
             "/images/background/anne-preble-198119-unsplash.jpg",
+            // "/images/background/morgan-von-gunten-1235413-unsplash.jpg",
+            // "/images/background/scott-warman-525481-unsplash.jpg",
+            // "/images/background/rawpixel-973112-unsplash.jpg",
+            // "/images/background/fikri-rasyid-786614-unsplash.jpg",
         ];
 
         loadingFeaturedProducts = false;
 
         featuredProducts: ProductData[] = [];
+
+        get appTitle() {
+            return AppConfig.title;
+        }
 
         private mounted() {
             this.onWindowResized();
@@ -186,6 +198,12 @@
 </script>
 
 <style lang="scss" scoped>
+    .ad-carousel {
+        /deep/ .v-image__image {
+            // background-size: contain !important;
+        }
+    }
+
     .v-card.infoCard {
         > i.v-icon {
             font-size: 64px;

@@ -1,5 +1,5 @@
 <template>
-    <v-layout class="max-height max-width">
+    <v-layout column class="max-height max-width">
             <transition name="router-view-switch-default" appear mode="out-in">
                 <router-view></router-view>
             </transition>

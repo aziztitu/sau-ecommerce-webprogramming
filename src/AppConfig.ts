@@ -2,7 +2,7 @@
 import colors from 'vuetify/es5/util/colors';
 
 export default {
-    title: 'Grocery Store - Shop Online',
+    title: 'Dollar Saver Market',
     mode: process.env.NODE_ENV,
     api: {
         baseURL: process.env.VUE_APP_API_BASE_URL,

@@ -3,11 +3,12 @@ import App from './App.vue';
 import router from './router';
 
 import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
+// import 'vuetify/dist/vuetify.min.css';
+import '@/stylus/main.styl';
 
 //@ts-ignore
 import VueAwesomeSwiper from 'vue-awesome-swiper';
-import 'swiper/dist/css/swiper.css'
+import 'swiper/dist/css/swiper.css';
 
 import { defaultTheme } from './AppConfig';
 import store from './store/';

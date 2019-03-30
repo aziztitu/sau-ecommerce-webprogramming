@@ -7,7 +7,7 @@
             <router-link to="/">
                 <Logo class></Logo>
             </router-link>
-            <v-toolbar-title>{{appTitle}}</v-toolbar-title>
+            <v-toolbar-title class="headline">{{appTitle}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
                 <v-btn
