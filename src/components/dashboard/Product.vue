@@ -55,6 +55,7 @@
                             color="accent"
                             :class="`mt-4 mx-0 ${smartLandscape?'fit-width':''}`"
                             @click="addProductToCart"
+                            :loading="isAddingToCart"
                         >
                             <v-icon left>add_shopping_cart</v-icon>
                             <span class="fw-600">Add to Cart</span>
@@ -115,7 +116,11 @@
                 </v-layout>
 
                 <v-layout v-if="editingData" justify-start align-start>
-                    <HTMLInputField label="Detail HTML" :livePreview="true" v-model="editingData.detailHTML"></HTMLInputField>
+                    <HTMLInputField
+                        label="Detail HTML"
+                        :livePreview="true"
+                        v-model="editingData.detailHTML"
+                    ></HTMLInputField>
                 </v-layout>
             </v-layout>
         </v-layout>
@@ -132,10 +137,12 @@
     import dashboardModule from '@/store/modules/dashboardModule';
     import lodash from 'lodash';
     import vendorService from '@/services/api/vendorService';
-    import SnackBar, { SnackBarTypes } from '@/components/singleton/SnackBar.vue';
-    import productService, { ProductData } from '@/services/api/productService';
+    import SnackBar, { SnackBarTypes, SnackBarOptions } from '@/components/singleton/SnackBar.vue';
+    import productService from '@/services/api/productService';
     import App from '@/App.vue';
     import HTMLInputField from '@/components/common/form/HTMLInputField.vue';
+    import { ProductData } from '@/tools/types/api';
+    import cartModule from '@/store/modules/cartModule';
 
     @Component({
         components: {
@@ -186,6 +193,7 @@
 
         isSaving = false;
         isRemoving = false;
+        isAddingToCart = false;
 
         editingData: ProductData | null = null;
 
@@ -198,6 +206,10 @@
 
         get vendor() {
             return dashboardModule.mapped.vendors[this.value.vendorId];
+        }
+
+        get cartModule() {
+            return cartModule;
         }
 
         get apiBaseURL() {
@@ -284,8 +296,18 @@
             }
         }
 
-        addProductToCart() {
-            SnackBar.show('Coming Soon...', SnackBarTypes.Success);
+        async addProductToCart() {
+            this.isAddingToCart = true;
+            let res = await cartModule.addToCart({
+                productId: this.value._id,
+                count: 1,
+            });
+            this.isAddingToCart = false;
+            if (res.data.success) {
+                SnackBar.show('Item added to cart');
+            } else {
+                SnackBar.show(res.data.message, SnackBarTypes.Error);
+            }
         }
 
         private onWindowResized() {

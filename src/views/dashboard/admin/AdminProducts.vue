@@ -128,12 +128,13 @@
     import Component from 'vue-class-component';
     import Placeholder from '@/views/misc/Placeholder.vue';
     import vendorService from '@/services/api/vendorService';
-    import productService, { ProductData } from '@/services/api/productService';
+    import productService from '@/services/api/productService';
     import FilePicker from '@/components/common/form/FilePicker.vue';
     import AppConfig from '@/AppConfig';
     import Product from '@/components/dashboard/Product.vue';
     import dashboardModule from '@/store/modules/dashboardModule';
     import HTMLInputField from '@/components/common/form/HTMLInputField.vue';
+    import { ProductData } from '@/tools/types/api';
 
 
     @Component({

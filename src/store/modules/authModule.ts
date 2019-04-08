@@ -8,25 +8,9 @@ import {
 } from 'vuex-module-decorators';
 import store from '..';
 import { Api } from '@/services/api/Api';
-import { ApiResponseData } from '@/tools/types/api';
+import { ApiResponseData, AccountData, AccountRole } from '@/tools/types/api';
 import AppHelper from '../../tools/AppHelper';
-
-export enum AccountRole {
-    Admin = 'admin',
-    User = 'user',
-}
-
-export enum ReservedUsername {
-    Empty = '',
-    Admin = 'admin',
-}
-
-export type AccountData = {
-    id: string;
-    username: string;
-    name: string;
-    role: AccountRole;
-} | null;
+import lodash from 'lodash';
 
 @Module({
     dynamic: true,
@@ -34,35 +18,41 @@ export type AccountData = {
     store: store,
 })
 class AuthModule extends VuexModule {
-    accountData: AccountData = null;
+    accountData: AccountData | null = null;
+
+    get defaultAccountData(): AccountData {
+        return {
+            id: '',
+            username: '',
+            name: '',
+            role: AccountRole.User,
+        };
+    }
 
     @MutationAction({ mutate: ['accountData'] })
-    async setAccountData(accountData: AccountData) {
+    async setAccountData(accountData: AccountData | null) {
         return { accountData };
     }
 
     @Action
     assignDummyAccount() {
-        this.setAccountData({
-            id: '',
-            username: 'dummy',
-            name: 'Dummy',
-            role: AccountRole.User,
-        });
+        this.setAccountData(this.defaultAccountData);
     }
 
     @Action
-    async refreshAuthData() {
-        const res = await Api.instance.get(`accounts/me/authData`);
-        AppHelper.debug(res);
-        if (res.data.success) {
-            let { accountInfo } = res.data.authData;
+    async refreshAccountData() {
+        const authRes = await Api.instance.get<ApiResponseData>(`accounts/me/authData`);
+
+        AppHelper.debug({ authRes });
+
+        if (authRes.data.success) {
+            let { accountInfo } = authRes.data.authData;
             await this.setAccountData(accountInfo);
         }
     }
 
     @Action
-    async clearAuthData() {
+    async clearAccountData() {
         await this.setAccountData(null);
     }
 
@@ -87,7 +77,7 @@ class AuthModule extends VuexModule {
 
         AppHelper.debug(res);
         if (res.data.success && autoRefreshAccount) {
-            await this.refreshAuthData();
+            await this.refreshAccountData();
         }
 
         return res;
@@ -116,7 +106,7 @@ class AuthModule extends VuexModule {
     async logoutSession() {
         const res = await Api.instance.post<ApiResponseData>('auth/logoutSession');
         if (res.data.success) {
-            await this.clearAuthData();
+            await this.clearAccountData();
         }
 
         return res;

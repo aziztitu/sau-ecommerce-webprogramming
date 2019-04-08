@@ -37,7 +37,7 @@
         }
 
         mounted() {
-            authModule.refreshAuthData();
+            authModule.refreshAccountData();
         }
 
         public switchTheme() {

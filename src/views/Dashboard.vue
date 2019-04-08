@@ -144,8 +144,9 @@
     import store from "@/store";
     import NavToolbar from "@/components/common/navigation/NavToolbar.vue";
     import SnackBar, { SnackBarTypes } from "@/components/singleton/SnackBar.vue";
-    import authModule, { AccountRole } from '@/store/modules/authModule';
+    import authModule from '@/store/modules/authModule';
     import dashboardModule from '@/store/modules/dashboardModule';
+    import { AccountRole } from '@/tools/types/api';
 
     interface NavRouterLink {
         to: { name: string } | string;

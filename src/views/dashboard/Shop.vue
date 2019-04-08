@@ -60,8 +60,9 @@
     import Vue from 'vue';
     import Component from 'vue-class-component';
     import Placeholder from '@/views/misc/Placeholder.vue';
-    import productService, { ProductData } from '@/services/api/productService';
+    import productService from '@/services/api/productService';
     import Product from '@/components/dashboard/Product.vue';
+    import { ProductData } from '@/tools/types/api';
 
     @Component({
         components: {

@@ -139,8 +139,9 @@
     import Logo from '@/components/common/app/Logo.vue';
     import Placeholder from '@/views/misc/Placeholder.vue';
     import Product from '@/components/dashboard/Product.vue';
-    import productService, { ProductData } from '@/services/api/productService';
+    import productService from '@/services/api/productService';
     import AppConfig from '@/AppConfig';
+    import { ProductData } from '@/tools/types/api';
 
     @Component({
         components: {

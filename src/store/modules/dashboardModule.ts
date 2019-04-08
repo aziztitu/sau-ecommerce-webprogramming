@@ -2,6 +2,7 @@ import { VuexModule, Module, getModule, Action, Mutation } from 'vuex-module-dec
 import store from '..';
 import vendorService from '@/services/api/vendorService';
 import AppHelper from '@/tools/AppHelper';
+import cartModule from './cartModule';
 
 export class VendorData {
     _id?: string;
@@ -31,6 +32,7 @@ class DashboardModule extends VuexModule {
     @Action
     refreshDashboardData() {
         this.refreshVendors();
+        cartModule.refreshCartData();
     }
 
     @Action

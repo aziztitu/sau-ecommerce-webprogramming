@@ -45,7 +45,7 @@
     import Vue from 'vue';
     import Component from 'vue-class-component';
     import PasswordField from '@/components/common/form/PasswordField.vue';
-    import authModule, { AccountData } from '@/store/modules/authModule';
+    import authModule from '@/store/modules/authModule';
 
     @Component({
         components: {

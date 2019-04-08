@@ -1,17 +1,6 @@
 import { Api } from './Api';
-import { ApiResponseData } from '@/tools/types/api';
+import { ApiResponseData, ProductData } from '@/tools/types/api';
 import lodash from 'lodash';
-
-export class ProductData {
-    _id: string = '';
-    name: string = '';
-    price: number = 0;
-    plu: string = '';
-    imageFile: File | null = null;
-    vendorId: string = '';
-    description: string = '';
-    detailHTML: string = '';
-}
 
 export default {
     async getAllProducts() {
