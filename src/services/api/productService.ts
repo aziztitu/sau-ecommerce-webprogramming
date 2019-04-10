@@ -26,7 +26,7 @@ export default {
         return res.data;
     },
 
-    async updateProduct(productId: string, productData: PartialOmit<ProductData, "_id">) {
+    async updateProduct(productId: string, productData: PartialOmit<ProductData, '_id'>) {
         let { imageFile } = productData;
 
         let formData = new FormData();
@@ -54,6 +54,13 @@ export default {
 
     async getProductDetails(productId: string) {
         let res = await Api.instance.get<ApiResponseData>(`products/select/${productId}/details`);
+        return res.data;
+    },
+
+    async getMultipleProducts(productIds: string[]) {
+        let res = await Api.instance.post<ApiResponseData>(`products/multiple`, {
+            productIds,
+        });
         return res.data;
     },
 };

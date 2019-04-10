@@ -11,6 +11,7 @@ import { Api } from '@/services/api/Api';
 import { ApiResponseData, AccountData, AccountRole } from '@/tools/types/api';
 import AppHelper from '../../tools/AppHelper';
 import lodash from 'lodash';
+import cartModule from './cartModule';
 
 @Module({
     dynamic: true,
@@ -78,6 +79,7 @@ class AuthModule extends VuexModule {
         AppHelper.debug(res);
         if (res.data.success && autoRefreshAccount) {
             await this.refreshAccountData();
+            await cartModule.refreshCartData();
         }
 
         return res;
@@ -107,6 +109,7 @@ class AuthModule extends VuexModule {
         const res = await Api.instance.post<ApiResponseData>('auth/logoutSession');
         if (res.data.success) {
             await this.clearAccountData();
+            await cartModule.refreshCartData();
         }
 
         return res;

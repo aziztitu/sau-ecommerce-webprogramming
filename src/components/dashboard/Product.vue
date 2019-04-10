@@ -1,8 +1,8 @@
 <template>
     <v-card
-        hover
+        :hover="hover"
         style
-        :class="`product pa-3 ${smartPortrait?'portrait':'landscape'}`"
+        :class="`product pa-3 ${flat?'flat':''} ${smartPortrait?'portrait':'landscape'} ${mini?'mini':''}`"
         v-resize="onWindowResized"
     >
         <v-layout column>
@@ -33,40 +33,107 @@
                     :pl-1="smartPortrait"
                     :pt-3="smartPortrait"
                     :pl-4="smartLandscape"
-                    :pt-1="smartLandscape"
+                    :pt-1="smartLandscape && !mini"
                     justify-start
                 >
-                    <v-layout column v-if="!editingData">
-                        <v-layout align-center mb-1 class="fit-height">
+                    <v-layout
+                        v-if="!editingData"
+                        :row="smartLandscape"
+                        :column="smartPortrait"
+                        :reverse="smartPortrait"
+                    >
+                        <v-layout column>
+                            <v-layout align-center mb-1 :pt-0="mini" class="fit-height">
+                                <div
+                                    :class="`product-name ${mini?'subheading':'title'} ${navigable?'clickable':''}`"
+                                    @click="navigateToProductDetails"
+                                >{{value.name}}</div>
+                                <v-spacer></v-spacer>
+                            </v-layout>
+                            <v-divider v-if="!mini"></v-divider>
+                            <v-flex
+                                :mt-3="!mini"
+                                :mt-1="mini"
+                                mb-2
+                                :class="`${mini?'subheading':'title'} ${cartControls?'':'fw-600'}`"
+                            >${{formatCurrency(value.price)}}</v-flex>
                             <div
-                                :class="`product-name ${'title'} ${navigable?'clickable':''}`"
-                                @click="navigateToProductDetails"
-                            >{{value.name}}</div>
-                            <v-spacer></v-spacer>
-                        </v-layout>
-                        <v-divider></v-divider>
-                        <div class="title mt-3 mb-2 fw-600">${{value.price}}</div>
-                        <div class="subheading mb-1" v-if="showDescription">{{value.description}}</div>
-                        <div class="subheading">#{{value.plu}}</div>
-                        <div class="subheading">by {{vendor?vendor.name:''}}</div>
+                                class="subheading mb-1"
+                                v-if="showDescription && !mini"
+                            >{{value.description}}</div>
+                            <div class="subheading" v-if="!mini">#{{value.plu}}</div>
+                            <div class="subheading" v-if="!mini">by {{vendor?vendor.name:''}}</div>
 
-                        <v-btn
-                            raised
-                            color="accent"
-                            :class="`mt-4 mx-0 ${smartLandscape?'fit-width':''}`"
-                            @click="addProductToCart"
-                            :loading="isAddingToCart"
-                        >
-                            <v-icon left>add_shopping_cart</v-icon>
-                            <span class="fw-600">Add to Cart</span>
-                        </v-btn>
+                            <v-layout :justify-center="smartPortrait" :mt-4="!mini" mx-0>
+                                <v-layout
+                                    :justify-center="smartPortrait"
+                                    align-center
+                                    v-if="cartCount > 0"
+                                >
+                                    <v-btn
+                                        outline
+                                        icon
+                                        :small="mini"
+                                        color="accent"
+                                        :class="`mx-0 mt-0 mb-0`"
+                                        @click="removeProductFromCart"
+                                        :disabled="isErasingFromCart || isAddingToCart"
+                                        :loading="isRemovingFromCart"
+                                    >
+                                        <v-icon :small="mini">remove</v-icon>
+                                    </v-btn>
+                                    <span class="mx-3">{{ cartCount }}</span>
+                                    <v-btn
+                                        outline
+                                        icon
+                                        :small="mini"
+                                        color="accent"
+                                        :class="`mx-0 mt-0 mb-0`"
+                                        @click="addProductToCart"
+                                        :disabled="isErasingFromCart || isRemovingFromCart"
+                                        :loading="isAddingToCart"
+                                    >
+                                        <v-icon :small="mini">add</v-icon>
+                                    </v-btn>
+
+                                    <v-btn
+                                        v-if="cartControls"
+                                        icon
+                                        :class="`mr-0 ml-3 mt-0 mb-0`"
+                                        @click="eraseFromCart"
+                                        :disabled="isAddingToCart || isRemovingFromCart"
+                                        :loading="isErasingFromCart"
+                                    >
+                                        <v-icon color="red">delete</v-icon>
+                                    </v-btn>
+                                </v-layout>
+                                <v-layout :justify-center="smartPortrait" v-else>
+                                    <v-btn
+                                        raised
+                                        color="accent"
+                                        :class="`mx-0 mt-0 ${smartLandscape?'fit-width':''}`"
+                                        @click="addProductToCart"
+                                        :loading="isAddingToCart"
+                                    >
+                                        <v-icon left>add_shopping_cart</v-icon>
+                                        <span class="fw-600">Add to Cart</span>
+                                    </v-btn>
+                                </v-layout>
+                            </v-layout>
+                        </v-layout>
+
+                        <v-layout v-if="cartControls" column>
+                            <v-layout row justify-end>
+                                <span class="headline fw-600">${{formatCurrency(value.price * cartCount)}}</span>
+                            </v-layout>
+                        </v-layout>
                     </v-layout>
                     <div v-else>
                         <v-layout column>
                             <v-text-field label="Name" v-model="editingData.name"></v-text-field>
                             <v-text-field label="Price" v-model="editingData.price"></v-text-field>
-                            <v-text-field label="PLU" v-model="editingData.plu"></v-text-field>
                             <v-text-field label="Description" v-model="editingData.description"></v-text-field>
+                            <v-text-field label="PLU" v-model="editingData.plu"></v-text-field>
                             <v-select
                                 v-model="editingData.vendorId"
                                 :items="vendors"
@@ -77,7 +144,7 @@
                         </v-layout>
                     </div>
                 </v-layout>
-                <v-spacer v-if="smartLandscape"></v-spacer>
+                <v-spacer v-if="smartLandscape && editable"></v-spacer>
                 <v-layout
                     v-if="editable"
                     :row="smartPortrait"
@@ -143,6 +210,7 @@
     import HTMLInputField from '@/components/common/form/HTMLInputField.vue';
     import { ProductData } from '@/tools/types/api';
     import cartModule from '@/store/modules/cartModule';
+    import AppHelper from '@/tools/AppHelper';
 
     @Component({
         components: {
@@ -191,9 +259,31 @@
         })
         detailed!: boolean;
 
+        @Prop({
+            default: false,
+        })
+        mini!: boolean;
+
+        @Prop({
+            default: false,
+        })
+        cartControls!: boolean;
+
+        @Prop({
+            default: true,
+        })
+        hover!: boolean;
+
+        @Prop({
+            default: false,
+        })
+        flat!: boolean;
+
         isSaving = false;
         isRemoving = false;
         isAddingToCart = false;
+        isRemovingFromCart = false;
+        isErasingFromCart = false;
 
         editingData: ProductData | null = null;
 
@@ -210,6 +300,17 @@
 
         get cartModule() {
             return cartModule;
+        }
+
+        get cartCount() {
+            let count = 0;
+            cartModule.cartData.cartItems.forEach(cartItem => {
+                if (cartItem.product == this.value._id) {
+                    count = cartItem.count;
+                }
+            });
+
+            return count;
         }
 
         get apiBaseURL() {
@@ -234,7 +335,8 @@
             }
         }
 
-        mounted() {
+        async mounted() {
+
         }
 
         async toggleEditMode(e: Event) {
@@ -296,6 +398,10 @@
             }
         }
 
+        formatCurrency(value: number) {
+            return AppHelper.formatCurrency(value);
+        }
+
         async addProductToCart() {
             this.isAddingToCart = true;
             let res = await cartModule.addToCart({
@@ -305,6 +411,31 @@
             this.isAddingToCart = false;
             if (res.data.success) {
                 SnackBar.show('Item added to cart');
+            } else {
+                SnackBar.show(res.data.message, SnackBarTypes.Error);
+            }
+        }
+
+        async removeProductFromCart() {
+            this.isRemovingFromCart = true;
+            let res = await cartModule.removeFromCart({
+                productId: this.value._id,
+                count: 1,
+            });
+            this.isRemovingFromCart = false;
+            if (res.data.success) {
+                SnackBar.show('Item removed from cart');
+            } else {
+                SnackBar.show(res.data.message, SnackBarTypes.Error);
+            }
+        }
+
+        async eraseFromCart() {
+            this.isErasingFromCart = true;
+            let res = await cartModule.eraseFromCart(this.value._id);
+            this.isErasingFromCart = false;
+            if (res.data.success) {
+                SnackBar.show('Item deleted from cart');
             } else {
                 SnackBar.show(res.data.message, SnackBarTypes.Error);
             }
@@ -322,6 +453,8 @@
 <style lang="scss" scoped>
     $productImageSize: 200px;
     $productImageSmallerSize: 150px;
+    $productImageMiniSize: 100px;
+    $productImageMiniSmallerSize: 80px;
 
     .product {
         // border-radius: 10px;
@@ -381,6 +514,29 @@
                     // width: $productImageSize;
                     display: block;
                     overflow: hidden;
+                }
+            }
+        }
+
+        &.mini {
+            .product-img-wrapper {
+                min-width: $productImageMiniSize;
+                max-width: $productImageMiniSize;
+                min-height: $productImageMiniSize;
+                max-height: $productImageMiniSize;
+
+                .product-img {
+                    min-width: $productImageMiniSize;
+                    max-width: $productImageMiniSize;
+                    min-height: $productImageMiniSize;
+                    max-height: $productImageMiniSize;
+
+                    &.smaller {
+                        min-width: $productImageMiniSmallerSize;
+                        max-width: $productImageMiniSmallerSize;
+                        min-height: $productImageMiniSmallerSize;
+                        max-height: $productImageMiniSmallerSize;
+                    }
                 }
             }
         }

@@ -83,4 +83,8 @@ export default class AppHelper {
     static isColorDark(color: string) {
         return AppHelper.lightOrDark(color) === 'dark';
     }
+
+    static formatCurrency(value: number) {
+        return value.toFixed(2);
+    }
 }
