@@ -7,6 +7,7 @@ import Home from '@/views/dashboard/Home.vue';
 import Shop from '@/views/dashboard/Shop.vue';
 import Cart from '@/views/dashboard/Cart.vue';
 import About from '@/views/dashboard/About.vue';
+import Checkout from '@/views/dashboard/Checkout.vue';
 import ProductDetails from '@/views/dashboard/ProductDetails.vue';
 import Admin from '@/views/dashboard/Admin.vue';
 
@@ -62,6 +63,11 @@ export default new Router({
                     path: 'product/:productId/details',
                     name: 'productDetails',
                     component: ProductDetails,
+                },
+                {
+                    path: 'checkout',
+                    name: 'checkout',
+                    component: Checkout,
                 },
                 {
                     path: 'admin',

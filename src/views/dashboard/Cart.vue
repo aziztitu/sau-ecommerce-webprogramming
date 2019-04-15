@@ -120,7 +120,10 @@
         }
 
         checkout() {
-            SnackBar.show('Coming Soon');
+            // SnackBar.show('Coming Soon');
+            this.$router.push({
+                name: 'checkout',
+            });
         }
     }
 </script>
