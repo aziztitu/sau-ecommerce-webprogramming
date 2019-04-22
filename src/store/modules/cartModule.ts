@@ -11,6 +11,7 @@ import { Api } from '@/services/api/Api';
 import { ApiResponseData, AccountData, AccountRole, CartData } from '@/tools/types/api';
 import AppHelper from '../../tools/AppHelper';
 import lodash from 'lodash';
+import authModule from './authModule';
 
 @Module({
     dynamic: true,
@@ -96,6 +97,43 @@ class CartModule extends VuexModule {
 
         return res;
     }
+
+    @Action
+    async placeOrderFromCart(orderData: NewOrderData) {
+        if (!authModule.accountData) {
+            return {
+                success: false,
+                message: 'Please log in first',
+            } as ApiResponseData;
+        }
+
+        const res = await Api.instance.put<ApiResponseData>(`cart/placeOrder`, orderData);
+
+        if (res.data.success) {
+            await this.refreshCartData();
+        }
+
+        return res.data;
+    }
 }
+
+export type NewOrderData = {
+    orderType: 0 | 1;
+
+    pickupDate: string;
+    pickupTime: string;
+
+    deliveryStreet: string;
+    deliveryCity: string;
+    deliveryState: string;
+    deliveryZip: string;
+
+    billingCardNum: string;
+    billingCVV: string;
+    billingStreet: string;
+    billingCity: string;
+    billingState: string;
+    billingZip: string;
+};
 
 export default getModule(CartModule);

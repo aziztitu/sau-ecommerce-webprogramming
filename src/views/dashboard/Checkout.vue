@@ -31,15 +31,17 @@
                 </v-stepper-step>
                 <v-stepper-content step="1">
                     <v-layout column>
-                        <v-radio-group v-model="orderType">
-                            <v-radio label="Pickup" color="primary" :value="0"></v-radio>
-                            <v-radio label="Delivery" color="primary" :value="1"></v-radio>
-                        </v-radio-group>
+                        <v-form ref="orderTypeForm">
+                            <v-radio-group v-model="orderType">
+                                <v-radio label="Pickup" color="primary" :value="0"></v-radio>
+                                <v-radio label="Delivery" color="primary" :value="1"></v-radio>
+                            </v-radio-group>
 
-                        <v-layout row>
-                            <v-btn color="primary" @click="checkoutStep++">Continue</v-btn>
-                            <!-- <v-btn flat>Cancel</v-btn> -->
-                        </v-layout>
+                            <v-layout row>
+                                <v-btn color="primary" @click="checkoutStep++">Continue</v-btn>
+                                <!-- <v-btn flat>Cancel</v-btn> -->
+                            </v-layout>
+                        </v-form>
                     </v-layout>
                 </v-stepper-content>
 
@@ -51,74 +53,88 @@
                 >Pickup Details</v-stepper-step>
                 <v-stepper-content step="2" v-if="orderType == 0">
                     <v-layout column>
-                        <v-menu
-                            ref="pickupDateMenu"
-                            v-model="pickupDateMenu"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            :return-value.sync="pickupDate"
-                            lazy
-                            transition="scale-transition"
-                            offset-y
-                            full-width
-                            min-width="290px"
-                        >
-                            <template slot="activator" slot-scope="slot">
-                                <v-text-field
-                                    v-model="pickupDate"
-                                    label="Pickup Date"
-                                    prepend-icon="event"
-                                    readonly
-                                    v-on="slot.on"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker v-model="pickupDate">
-                                <v-spacer></v-spacer>
-                                <v-btn flat color="primary" @click="pickupDateMenu = false">Cancel</v-btn>
-                                <v-btn
-                                    flat
-                                    color="primary"
-                                    @click="$refs.pickupDateMenu.save(pickupDate)"
-                                >OK</v-btn>
-                            </v-date-picker>
-                        </v-menu>
+                        <v-form ref="pickupForm">
+                            <v-menu
+                                ref="pickupDateMenu"
+                                v-model="pickupDateMenu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                :return-value.sync="pickupDate"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                            >
+                                <template slot="activator" slot-scope="slot">
+                                    <v-text-field
+                                        v-model="pickupDate"
+                                        label="Pickup Date"
+                                        prepend-icon="event"
+                                        readonly
+                                        v-on="slot.on"
+                                    ></v-text-field>
+                                </template>
+                                <v-date-picker v-model="pickupDate">
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        flat
+                                        color="primary"
+                                        @click="pickupDateMenu = false"
+                                    >Cancel</v-btn>
+                                    <v-btn
+                                        flat
+                                        color="primary"
+                                        @click="$refs.pickupDateMenu.save(pickupDate)"
+                                    >OK</v-btn>
+                                </v-date-picker>
+                            </v-menu>
 
-                        <v-menu
-                            ref="pickupTimeMenu"
-                            v-model="pickupTimeMenu"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            :return-value.sync="pickupTime"
-                            lazy
-                            transition="scale-transition"
-                            offset-y
-                            full-width
-                            min-width="290px"
-                        >
-                            <template slot="activator" slot-scope="slot">
-                                <v-text-field
-                                    v-model="pickupTime"
-                                    label="Pickup Time"
-                                    prepend-icon="access_time"
-                                    readonly
-                                    v-on="slot.on"
-                                ></v-text-field>
-                            </template>
-                            <v-time-picker v-model="pickupTime">
-                                <v-spacer></v-spacer>
-                                <v-btn flat color="primary" @click="pickupTimeMenu = false">Cancel</v-btn>
-                                <v-btn
-                                    flat
-                                    color="primary"
-                                    @click="$refs.pickupTimeMenu.save(pickupTime)"
-                                >OK</v-btn>
-                            </v-time-picker>
-                        </v-menu>
+                            <v-menu
+                                ref="pickupTimeMenu"
+                                v-model="pickupTimeMenu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                :return-value.sync="pickupTime"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                            >
+                                <template slot="activator" slot-scope="slot">
+                                    <v-text-field
+                                        v-model="pickupTime"
+                                        label="Pickup Time"
+                                        prepend-icon="access_time"
+                                        readonly
+                                        v-on="slot.on"
+                                    ></v-text-field>
+                                </template>
+                                <v-time-picker v-model="pickupTime">
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        flat
+                                        color="primary"
+                                        @click="pickupTimeMenu = false"
+                                    >Cancel</v-btn>
+                                    <v-btn
+                                        flat
+                                        color="primary"
+                                        @click="$refs.pickupTimeMenu.save(pickupTime)"
+                                    >OK</v-btn>
+                                </v-time-picker>
+                            </v-menu>
 
-                        <v-layout row>
-                            <v-btn color="primary" @click="checkoutStep++">Continue</v-btn>
-                            <v-btn flat @click="checkoutStep--">Cancel</v-btn>
-                        </v-layout>
+                            <v-layout row>
+                                <v-btn
+                                    color="primary"
+                                    :enabled="isPickupDetailsValid"
+                                    @click="checkoutStep++"
+                                >Continue</v-btn>
+                                <v-btn flat @click="checkoutStep--">Cancel</v-btn>
+                            </v-layout>
+                        </v-form>
                     </v-layout>
                 </v-stepper-content>
 
@@ -130,14 +146,35 @@
                 >Delivery Details</v-stepper-step>
                 <v-stepper-content step="2" v-if="orderType == 1">
                     <v-layout column>
-                        <v-text-field label="Street" v-model="deliveryStreet"></v-text-field>
-                        <v-text-field label="City" v-model="deliveryCity"></v-text-field>
-                        <v-text-field label="State" v-model="deliveryState"></v-text-field>
-                        <v-text-field label="Zip Code" v-model="deliveryZip"></v-text-field>
-                        <v-layout row>
-                            <v-btn color="primary" @click="checkoutStep++">Continue</v-btn>
-                            <v-btn flat @click="checkoutStep--">Cancel</v-btn>
-                        </v-layout>
+                        <v-form ref="deliveryForm" lazy-validation>
+                            <v-text-field
+                                label="Street"
+                                v-model="deliveryStreet"
+                                :rules="[rules.nonEmptyString]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="City"
+                                v-model="deliveryCity"
+                                :rules="[rules.nonEmptyString]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="State"
+                                v-model="deliveryState"
+                                :rules="[rules.nonEmptyString]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="Zip Code"
+                                v-model="deliveryZip"
+                                :rules="[rules.nonEmptyString,rules.numericOnly]"
+                            ></v-text-field>
+                            <v-layout row>
+                                <v-btn
+                                    color="primary"
+                                    @click="moveToNextStep($refs.deliveryForm)"
+                                >Continue</v-btn>
+                                <v-btn flat @click="checkoutStep--">Cancel</v-btn>
+                            </v-layout>
+                        </v-form>
                     </v-layout>
                 </v-stepper-content>
 
@@ -148,21 +185,50 @@
                 >Billing</v-stepper-step>
                 <v-stepper-content step="3">
                     <v-layout column>
-                        <v-text-field label="Credit / Debit Card" v-model="billingCardNum"></v-text-field>
-                        <v-text-field label="CVV" v-model="billingCVV"></v-text-field>
+                        <v-form ref="billingForm">
+                            <v-text-field
+                                label="Credit / Debit Card"
+                                v-model="billingCardNum"
+                                :rules="[rules.nonEmptyString,rules.numericOnly]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="CVV"
+                                v-model="billingCVV"
+                                :rules="[rules.nonEmptyString,rules.numericOnly]"
+                            ></v-text-field>
 
-                        <v-layout column align-start mt-3>
-                            <span class="subheading fw-600">Billing Address</span>
-                        </v-layout>
-                        <v-text-field label="Street" v-model="billingStreet"></v-text-field>
-                        <v-text-field label="City" v-model="billingCity"></v-text-field>
-                        <v-text-field label="State" v-model="billingState"></v-text-field>
-                        <v-text-field label="Zip Code" v-model="billingZip"></v-text-field>
+                            <v-layout column align-start mt-3>
+                                <span class="subheading fw-600">Billing Address</span>
+                            </v-layout>
+                            <v-text-field
+                                label="Street"
+                                v-model="billingStreet"
+                                :rules="[rules.nonEmptyString]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="City"
+                                v-model="billingCity"
+                                :rules="[rules.nonEmptyString]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="State"
+                                v-model="billingState"
+                                :rules="[rules.nonEmptyString]"
+                            ></v-text-field>
+                            <v-text-field
+                                label="Zip Code"
+                                v-model="billingZip"
+                                :rules="[rules.nonEmptyString,rules.numericOnly]"
+                            ></v-text-field>
 
-                        <v-layout row>
-                            <v-btn color="primary" @click="checkoutStep++">Continue</v-btn>
-                            <v-btn flat @click="checkoutStep--">Cancel</v-btn>
-                        </v-layout>
+                            <v-layout row>
+                                <v-btn
+                                    color="primary"
+                                    @click="moveToNextStep($refs.billingForm)"
+                                >Continue</v-btn>
+                                <v-btn flat @click="checkoutStep--">Cancel</v-btn>
+                            </v-layout>
+                        </v-form>
                     </v-layout>
                 </v-stepper-content>
 
@@ -220,10 +286,15 @@
                         </v-layout>
 
                         <v-layout row mt-4 justify-start reverse>
-                            <v-btn color="primary" @click="placeOrder">
+                            <v-btn
+                                color="primary"
+                                @click="placeOrder"
+                                :loading="placingOrder"
+                                :disabled="placingOrder"
+                            >
                                 <span class="fw-600">Place Order</span>
                             </v-btn>
-                            <v-btn flat @click="checkoutStep--">Cancel</v-btn>
+                            <v-btn flat @click="checkoutStep--" :disabled="placingOrder">Cancel</v-btn>
                         </v-layout>
                     </v-layout>
                 </v-stepper-content>
@@ -242,6 +313,8 @@
     import productService from '@/services/api/productService';
     import AppHelper from '@/tools/AppHelper';
     import authModule from '@/store/modules/authModule';
+    import dashboardModule from '../../store/modules/dashboardModule';
+    import SnackBar, { SnackBarTypes } from '../../components/singleton/SnackBar.vue';
 
     @Component({
         components: {
@@ -274,17 +347,21 @@
         }
 
         get tax() {
-            return 0.08 * this.subTotal;
+            return dashboardModule.tax * this.subTotal;
         }
 
         get total() {
             return this.subTotal + this.tax + (this.orderType == 1 ? this.deliveryCharge : 0);
         }
 
+        get deliveryCharge() {
+            return dashboardModule.deliveryCharge;
+        }
+
         cartProducts: ProductData[] = [];
-        deliveryCharge = 3;
 
         loadingCartProducts = false;
+        placingOrder = false;
 
         checkoutStep = 1;
 
@@ -307,6 +384,35 @@
         billingCity = "";
         billingState = "";
         billingZip = "";
+
+        rules = {
+            nonEmptyString: (v: string) => !!(v.trim()) || "Required",
+            numericOnly: (v: string) => !!v.trim().match(/^\d+$/) || "Only numeric values allowed",
+        };
+
+        get isPickupDetailsValid() {
+            return true;
+        }
+
+        get isDeliveryDetailsValid() {
+            let deliveryForm = this.$refs.deliveryForm as any;
+
+            if (!deliveryForm) {
+                return false;
+            }
+
+            return deliveryForm.validate();
+        }
+
+        get isBillingDetailsValid() {
+            let billingForm = this.$refs.billingForm as any;
+
+            if (!billingForm) {
+                return false;
+            }
+
+            return billingForm.validate();
+        }
 
         async mounted() {
             if (authModule.accountData == null) {
@@ -336,8 +442,37 @@
             return AppHelper.formatCurrency(value);
         }
 
-        placeOrder() {
+        async placeOrder() {
+            this.placingOrder = true;
+            let resData = await cartModule.placeOrderFromCart({
+                orderType: this.orderType,
+                pickupDate: this.pickupDate,
+                pickupTime: this.pickupTime,
+                deliveryStreet: this.deliveryStreet,
+                deliveryCity: this.deliveryCity,
+                deliveryState: this.deliveryState,
+                deliveryZip: this.deliveryZip,
+                billingCardNum: this.billingCardNum,
+                billingCVV: this.billingCVV,
+                billingStreet: this.billingStreet,
+                billingCity: this.billingCity,
+                billingState: this.billingState,
+                billingZip: this.billingZip
+            });
+            this.placingOrder = false;
 
+            if (resData.success) {
+                SnackBar.show("Order placed successfully", SnackBarTypes.Success);
+                this.$router.push({ name: 'orders' });
+            } else {
+                SnackBar.show(resData.message, SnackBarTypes.Error);
+            }
+        }
+
+        moveToNextStep(curForm: any) {
+            if (curForm.validate()) {
+                this.checkoutStep++;
+            }
         }
     }
 </script>

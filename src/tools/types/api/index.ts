@@ -40,3 +40,33 @@ export class ProductData {
     description: string = '';
     detailHTML: string = '';
 }
+
+export class OrderItemData {
+    product!: string;
+    price!: number;
+    qty!: number;
+}
+
+export class OrderData {
+    orderItems!: OrderItemData[];
+
+    taxRate!: number;
+    deliveryCharge!: number;
+
+    orderType!: 0 | 1;
+
+    pickupDate!: string;
+    pickupTime!: string;
+
+    deliveryStreet!: string;
+    deliveryCity!: string;
+    deliveryState!: string;
+    deliveryZip!: string;
+
+    billingCardNum!: string;
+    billingCVV!: string;
+    billingStreet!: string;
+    billingCity!: string;
+    billingState!: string;
+    billingZip!: string;
+}

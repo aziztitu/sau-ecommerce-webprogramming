@@ -56,7 +56,7 @@
                                 :mt-1="mini"
                                 mb-2
                                 :class="`${mini?'subheading':'title'} ${cartControls?'':'fw-600'}`"
-                            >${{formatCurrency(value.price)}}</v-flex>
+                            >${{formatCurrency(price)}}</v-flex>
                             <div
                                 class="subheading mb-1"
                                 v-if="showDescription && !mini"
@@ -64,7 +64,7 @@
                             <div class="subheading" v-if="!mini">#{{value.plu}}</div>
                             <div class="subheading" v-if="!mini">by {{vendor?vendor.name:''}}</div>
 
-                            <v-layout :justify-center="smartPortrait" :mt-4="!mini" mx-0>
+                            <v-layout v-if="!viewMode" :justify-center="smartPortrait" :mt-4="!mini" mx-0>
                                 <v-layout
                                     :justify-center="smartPortrait"
                                     align-center
@@ -120,11 +120,19 @@
                                     </v-btn>
                                 </v-layout>
                             </v-layout>
+                            <v-layout v-if="quantity >= 0">
+                                <span class="fw-500" style="font-size: 16px">Quantity: {{quantity}}</span>
+                            </v-layout>
                         </v-layout>
 
                         <v-layout v-if="cartControls" column>
                             <v-layout row justify-end>
-                                <span class="headline fw-600">${{formatCurrency(value.price * cartCount)}}</span>
+                                <span class="headline fw-600">${{formatCurrency(price * cartCount)}}</span>
+                            </v-layout>
+                        </v-layout>
+                        <v-layout v-if="quantity >= 0" column>
+                            <v-layout row justify-end>
+                                <span class="headline fw-600">${{formatCurrency(price * quantity)}}</span>
                             </v-layout>
                         </v-layout>
                     </v-layout>
@@ -270,6 +278,16 @@
         cartControls!: boolean;
 
         @Prop({
+            default: false,
+        })
+        viewMode!: boolean;
+
+        @Prop({
+            default: -1,
+        })
+        quantity!: number;
+
+        @Prop({
             default: true,
         })
         hover!: boolean;
@@ -278,6 +296,11 @@
             default: false,
         })
         flat!: boolean;
+
+        @Prop({
+            default: -1,
+        })
+        overridePrice!: number;
 
         isSaving = false;
         isRemoving = false;
@@ -296,6 +319,14 @@
 
         get vendor() {
             return dashboardModule.mapped.vendors[this.value.vendorId];
+        }
+
+        get price() {
+            if (this.overridePrice >= 0) {
+                return +this.overridePrice;
+            }
+
+            return +this.value.price;
         }
 
         get cartModule() {

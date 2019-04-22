@@ -22,10 +22,7 @@ export default {
         return res.data;
     },
 
-    async updateAccountInfo(
-        accountId: string | SpecialAccountIdentifiers,
-        accountInfo: any
-    ) {
+    async updateAccountInfo(accountId: string | SpecialAccountIdentifiers, accountInfo: any) {
         const res = await Api.instance.put<ApiResponseData>(
             `accounts/${accountId}/info`,
             accountInfo
@@ -42,10 +39,12 @@ export default {
     },
 
     async createNewAccount(accountInfo: any) {
-        const res = await Api.instance.post<ApiResponseData>(
-            `accounts/new`,
-            accountInfo
-        );
+        const res = await Api.instance.post<ApiResponseData>(`accounts/new`, accountInfo);
         return res.data;
-    }
+    },
+
+    async getOrders(accountId: string) {
+        const res = await Api.instance.get<ApiResponseData>(`accounts/${accountId}/orders`);
+        return res.data;
+    },
 };

@@ -6,6 +6,7 @@ import MyAccount from '@/views/dashboard/MyAccount.vue';
 import Home from '@/views/dashboard/Home.vue';
 import Shop from '@/views/dashboard/Shop.vue';
 import Cart from '@/views/dashboard/Cart.vue';
+import Orders from '@/views/dashboard/Orders.vue';
 import About from '@/views/dashboard/About.vue';
 import Checkout from '@/views/dashboard/Checkout.vue';
 import ProductDetails from '@/views/dashboard/ProductDetails.vue';
@@ -53,6 +54,11 @@ export default new Router({
                     path: 'cart',
                     name: 'cart',
                     component: Cart,
+                },
+                {
+                    path: 'orders',
+                    name: 'orders',
+                    component: Orders,
                 },
                 {
                     path: 'about',

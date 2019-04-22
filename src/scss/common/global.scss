@@ -146,6 +146,14 @@ span.dark {
     &.flat {
         box-shadow: none !important;
     }
+
+    &.bordered {
+        border: 1px solid #bbb !important;
+
+        &.theme--dark {
+            border-color: #777 !important;
+        }
+    }
 }
 
 .v-expansion-panel--inset,

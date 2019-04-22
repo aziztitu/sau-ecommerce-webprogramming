@@ -82,6 +82,7 @@
                             <v-divider></v-divider>
                             <router-link
                                 v-for="navRouterLink in navRouterLinkGroup"
+                                v-show="!navRouterLink.condition || navRouterLink.condition()"
                                 :key="navRouterLink.title"
                                 :to="navRouterLink.to"
                                 tag="v-list-tile"
@@ -153,6 +154,7 @@
         icon: string;
         title: string;
         addDivider?: boolean;
+        condition?: Function;
     }
 
     @Component({
@@ -215,7 +217,15 @@
                     to: { name: 'cart' },
                     icon: "shopping_cart",
                     title: "Cart"
-                }
+                },
+                {
+                    to: { name: 'orders' },
+                    icon: "card_travel",
+                    title: "Orders",
+                    condition: () => {
+                        return authModule.accountData !== null;
+                    },
+                },
             ],
             [
                 {
