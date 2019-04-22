@@ -11,7 +11,7 @@
             color="secondary"
         ></v-progress-linear>
         <v-card-text>
-            <v-layout column>
+            <v-layout column v-if="orders.length > 0">
                 <v-flex v-for="(order, i) in orders" :key="i" my-2>
                     <v-card flat class="bordered">
                         <v-card-title class="title">Order {{i+1}}</v-card-title>
@@ -32,6 +32,9 @@
                         </v-card-text>
                     </v-card>
                 </v-flex>
+            </v-layout>
+            <v-layout column v-else-if="!loadingOrders" pa-3>
+                <span>You haven't placed any orders yet</span>
             </v-layout>
         </v-card-text>
     </v-card>
